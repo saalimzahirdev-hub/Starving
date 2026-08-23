@@ -1,0 +1,509 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================
+   CSS CUSTOM PROPERTIES — STARVING DESIGN SYSTEM
+   ============================================= */
+:root {
+  --green-950:     #061610;
+  --green-dark:    #0a2318;
+  --green-default: #0d3520;
+  --green-mid:     #1a5c35;
+  --green-light:   #27904e;
+  --gold-dark:     #a8882e;
+  --gold-default:  #c9a84c;
+  --gold-light:    #e8c97a;
+  --surface:       #111815;
+  --surface-card:  #16211a;
+  --surface-hover: #1c2b22;
+  --surface-glass: rgba(13, 53, 32, 0.55);
+  --border-gold:   rgba(201, 168, 76, 0.18);
+  --border-green:  rgba(39, 144, 78, 0.2);
+  --shadow-card:   0 4px 24px rgba(0,0,0,0.45);
+  --shadow-gold:   0 0 24px rgba(201,168,76,0.25);
+  --radius-card:   16px;
+  --radius-btn:    10px;
+  --transition:    all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =============================================
+   GLOBAL RESETS & BASE
+   ============================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--surface);
+  color: #e8f0ec;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--green-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--gold-dark);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-default);
+}
+
+/* =============================================
+   TYPOGRAPHY
+   ============================================= */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+  line-height: 1.2;
+}
+
+.font-brand {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.text-gold {
+  color: var(--gold-default);
+}
+
+.text-gold-light {
+  color: var(--gold-light);
+}
+
+/* =============================================
+   GLASSMORPHISM
+   ============================================= */
+.glass {
+  background: var(--surface-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-gold);
+}
+
+.glass-card {
+  background: linear-gradient(145deg, rgba(26,44,34,0.85) 0%, rgba(13,35,24,0.92) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition: var(--transition);
+}
+
+.glass-card:hover {
+  border-color: rgba(201, 168, 76, 0.35);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6), var(--shadow-gold);
+  transform: translateY(-2px);
+}
+
+/* =============================================
+   BUTTONS
+   ============================================= */
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #c9a84c 0%, #e8c97a 50%, #c9a84c 100%);
+  background-size: 200% auto;
+  color: #0d3520;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  padding: 12px 28px;
+  border-radius: var(--radius-btn);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.btn-gold:hover {
+  background-position: right center;
+  box-shadow: 0 6px 24px rgba(201,168,76,0.4);
+  transform: translateY(-1px);
+}
+.btn-gold:active {
+  transform: translateY(0);
+}
+
+.btn-outline-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--gold-default);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  padding: 11px 27px;
+  border-radius: var(--radius-btn);
+  border: 1.5px solid var(--gold-default);
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+}
+.btn-outline-gold:hover {
+  background: rgba(201,168,76,0.1);
+  box-shadow: 0 0 20px rgba(201,168,76,0.2);
+}
+
+.btn-green {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--green-mid);
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 12px 24px;
+  border-radius: var(--radius-btn);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-green:hover {
+  background: var(--green-light);
+  transform: translateY(-1px);
+}
+
+.btn-red {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(220,38,38,0.15);
+  color: #f87171;
+  border: 1px solid rgba(220,38,38,0.3);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 10px 20px;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-red:hover {
+  background: rgba(220,38,38,0.3);
+}
+
+/* Icon-only buttons */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border-gold);
+  background: var(--surface-card);
+  color: var(--gold-default);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.icon-btn:hover {
+  background: var(--surface-hover);
+  border-color: var(--gold-default);
+}
+
+/* =============================================
+   FORM INPUTS
+   ============================================= */
+.input-field {
+  width: 100%;
+  background: rgba(13,53,32,0.3);
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-btn);
+  padding: 12px 16px;
+  color: #e8f0ec;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transition);
+}
+.input-field::placeholder {
+  color: rgba(232,240,236,0.35);
+}
+.input-field:focus {
+  border-color: var(--gold-default);
+  background: rgba(13,53,32,0.5);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+}
+
+.input-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gold-light);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* =============================================
+   GOLD DIVIDER
+   ============================================= */
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-default), transparent);
+  opacity: 0.4;
+  margin: 8px 0;
+}
+
+/* =============================================
+   SECTION HEADER
+   ============================================= */
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-default);
+  margin-bottom: 12px;
+}
+.section-tag::before,
+.section-tag::after {
+  content: '';
+  height: 1px;
+  width: 24px;
+  background: var(--gold-default);
+  opacity: 0.6;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: #f0ead6;
+  line-height: 1.15;
+}
+
+.section-subtitle {
+  color: rgba(232,240,236,0.6);
+  font-size: 1rem;
+  max-width: 520px;
+  line-height: 1.7;
+  margin-top: 12px;
+}
+
+/* =============================================
+   SKELETON LOADING
+   ============================================= */
+.skeleton {
+  background: linear-gradient(90deg, rgba(26,44,34,0.8) 25%, rgba(39,80,56,0.5) 50%, rgba(26,44,34,0.8) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+/* =============================================
+   STATUS BADGES
+   ============================================= */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 50px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.badge-pending   { background: rgba(251,191,36,0.15);  color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+.badge-preparing { background: rgba(249,115,22,0.15);  color: #f97316; border: 1px solid rgba(249,115,22,0.3); }
+.badge-ready     { background: rgba(59,130,246,0.15);  color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+.badge-delivery  { background: rgba(139,92,246,0.15);  color: #a78bfa; border: 1px solid rgba(139,92,246,0.3); }
+.badge-delivered { background: rgba(34,197,94,0.15);   color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+.badge-cancelled { background: rgba(239,68,68,0.15);   color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+
+/* =============================================
+   PAGE TRANSITIONS
+   ============================================= */
+.page-enter {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+/* =============================================
+   MOBILE NAV SAFE AREA
+   ============================================= */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 72px;
+  }
+}
+
+/* =============================================
+   CUSTOM RANGE SLIDER
+   ============================================= */
+input[type='range'] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-gold);
+  outline: none;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--gold-default);
+  cursor: pointer;
+}
+
+/* =============================================
+   QUANTITY STEPPER
+   ============================================= */
+.qty-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border: 1.5px solid var(--border-gold);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.qty-stepper button {
+  width: 32px;
+  height: 32px;
+  background: var(--surface-card);
+  color: var(--gold-default);
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.qty-stepper button:hover {
+  background: var(--surface-hover);
+}
+.qty-stepper span {
+  min-width: 36px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #e8f0ec;
+  background: var(--surface);
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid var(--border-gold);
+  border-right: 1px solid var(--border-gold);
+}
+
+/* =============================================
+   PRICE DISPLAY
+   ============================================= */
+.price-current {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: var(--gold-default);
+  font-size: 1.1rem;
+}
+.price-original {
+  font-size: 0.8rem;
+  color: rgba(232,240,236,0.4);
+  text-decoration: line-through;
+  margin-left: 4px;
+}
+.price-discount {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #4ade80;
+  background: rgba(34,197,94,0.12);
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin-left: 6px;
+}
+
+/* =============================================
+   ADMIN SIDEBAR
+   ============================================= */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--green-950);
+}
+
+/* =============================================
+   TOAST OVERRIDE
+   ============================================= */
+.hot-toast-container {
+  z-index: 9999 !important;
+}
+
+/* =============================================
+   HERO ORNAMENT
+   ============================================= */
+.ornament-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--gold-default);
+  opacity: 0.6;
+  font-size: 1.2rem;
+}
+.ornament-line::before,
+.ornament-line::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-default));
+}
+.ornament-line::after {
+  background: linear-gradient(90deg, var(--gold-default), transparent);
+}
+
+/* =============================================
+   UTILITY: NO SELECT
+   ============================================= */
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* =============================================
+   SCROLL PADDING
+   ============================================= */
+section[id] {
+  scroll-margin-top: 80px;
+}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Phone, MessageCircle, Clock, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { Phone, MessageCircle, ChevronDown, ChevronUp, X, Check, CreditCard, Smartphone, Banknote } from 'lucide-react';
 import { useOrders } from '../../context/OrderContext';
 import { formatPrice, formatDateTime, timeAgo, statusConfig } from '../../utils/formatters';
 
@@ -12,7 +12,7 @@ const STATUS_ACTIONS = [
 ];
 
 export default function OrderCard({ order }) {
-  const { updateOrderStatus, cancelOrder } = useOrders();
+  const { updateOrderStatus, updatePaymentStatus, cancelOrder } = useOrders();
   const [expanded, setExpanded] = useState(false);
   const [cancelMode, setCancelMode] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
@@ -23,8 +23,19 @@ export default function OrderCard({ order }) {
   const isDelivered = order.status === 'delivered';
   const isActive = !isCancelled && !isDelivered;
 
+  const isJazzCash = order.paymentMethod === 'jazzcash';
+  const isEasyPaisa = order.paymentMethod === 'easypaisa';
+  const isOnline = isJazzCash || isEasyPaisa;
+  const isPaid = order.paymentStatus === 'paid';
+
   const handleAction = (toStatus) => {
     updateOrderStatus(order.id, toStatus);
+  };
+
+  const handleTogglePayment = () => {
+    if (updatePaymentStatus) {
+      updatePaymentStatus(order.id, isPaid ? 'pending_verification' : 'paid');
+    }
   };
 
   const handleCancel = () => {
@@ -48,9 +59,26 @@ export default function OrderCard({ order }) {
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2 flex-wrap">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="font-bold text-white text-sm">{order.id}</span>
               <span className={`badge ${cfg.badgeClass}`}>{cfg.label}</span>
+
+              {/* Payment Method Badge in Header */}
+              {isJazzCash && (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30 flex items-center gap-1">
+                  🟠 JazzCash {order.onlinePaymentDetails?.transactionId && `• TID: ${order.onlinePaymentDetails.transactionId}`}
+                </span>
+              )}
+              {isEasyPaisa && (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+                  🟢 EasyPaisa {order.onlinePaymentDetails?.transactionId && `• TID: ${order.onlinePaymentDetails.transactionId}`}
+                </span>
+              )}
+              {order.paymentMethod === 'cod' && (
+                <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white/10 text-white/70">
+                  💵 COD
+                </span>
+              )}
             </div>
             <span className="text-white/35 text-xs flex-shrink-0">{timeAgo(order.createdAt)}</span>
           </div>
@@ -89,6 +117,43 @@ export default function OrderCard({ order }) {
             className="overflow-hidden"
           >
             <div className="px-4 pb-4 border-t border-white/5 pt-3 space-y-4">
+              {/* Online Payment Verification Box */}
+              {isOnline && (
+                <div className={`p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                  isJazzCash ? 'bg-orange-500/10 border-orange-500/30' : 'bg-emerald-500/10 border-emerald-500/30'
+                }`}>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <Smartphone size={15} className={isJazzCash ? 'text-orange-400' : 'text-emerald-400'} />
+                      <span className="font-bold text-xs text-white">
+                        {isJazzCash ? 'JazzCash Mobile Payment' : 'EasyPaisa Mobile Payment'}
+                      </span>
+                    </div>
+                    <div className="mt-1 space-y-0.5 text-xs">
+                      <p className="text-white/80">
+                        Transaction ID (TID): <strong className="text-brand-gold font-mono bg-black/40 px-1.5 py-0.5 rounded">{order.onlinePaymentDetails?.transactionId || 'N/A'}</strong>
+                      </p>
+                      {order.onlinePaymentDetails?.senderPhone && (
+                        <p className="text-white/50">Sender Phone: {order.onlinePaymentDetails.senderPhone}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleTogglePayment}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 self-start sm:self-auto transition-all ${
+                      isPaid
+                        ? 'bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30'
+                        : 'bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30'
+                    }`}
+                  >
+                    <Check size={13} />
+                    <span>{isPaid ? 'Payment Verified (Paid)' : 'Mark Payment as Verified'}</span>
+                  </button>
+                </div>
+              )}
+
               {/* Items */}
               <div>
                 <p className="text-xs text-white/35 font-semibold uppercase tracking-wide mb-2">Items</p>
@@ -120,8 +185,8 @@ export default function OrderCard({ order }) {
               )}
 
               {/* Summary */}
-              <div className="flex gap-4 text-xs text-white/40 flex-wrap">
-                <span>💳 {order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment'}</span>
+              <div className="flex gap-4 text-xs text-white/40 flex-wrap items-center">
+                <span>💳 {order.paymentMethodLabel || (order.paymentMethod === 'cod' ? 'Cash on Delivery' : order.paymentMethod)}</span>
                 <span>🕐 {formatDateTime(order.createdAt)}</span>
                 {order.deliveredAt && <span>✅ {formatDateTime(order.deliveredAt)}</span>}
               </div>

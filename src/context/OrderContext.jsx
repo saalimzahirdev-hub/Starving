@@ -137,6 +137,12 @@ export function OrderProvider({ children }) {
     return updated;
   }, []);
 
+  const updatePaymentStatus = useCallback((id, paymentStatus) => {
+    const updated = orderService.updatePaymentStatus(id, paymentStatus);
+    setOrders(orderService.getAll());
+    return updated;
+  }, []);
+
   const getOrderById = useCallback((id) => {
     return orders.find(o => o.id === id) || orderService.getById(id);
   }, [orders]);
@@ -152,6 +158,7 @@ export function OrderProvider({ children }) {
       setActiveOrderId,
       placeOrder,
       updateOrderStatus,
+      updatePaymentStatus,
       cancelOrder,
       getOrderById,
       playOrderChime,

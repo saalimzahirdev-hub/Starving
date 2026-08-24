@@ -38,6 +38,26 @@ const DEFAULT_SETTINGS = {
     discount: 10,
     type: 'percent', // 'percent' | 'fixed'
   },
+  paymentMethods: {
+    cod: {
+      enabled: true,
+      label: 'Cash on Delivery (COD)',
+    },
+    jazzcash: {
+      enabled: true,
+      label: 'JazzCash',
+      accountNumber: '+92 339 666733',
+      accountTitle: 'STARVING / Fast Food',
+      instructions: 'Transfer the total amount to the JazzCash number above and enter your Transaction ID (TID) below.',
+    },
+    easypaisa: {
+      enabled: true,
+      label: 'EasyPaisa',
+      accountNumber: '+92 339 666733',
+      accountTitle: 'STARVING / Fast Food',
+      instructions: 'Transfer the total amount to the EasyPaisa number above and enter your Transaction ID (TID) below.',
+    },
+  },
 };
 
 export const settingsService = {
@@ -50,8 +70,11 @@ export const settingsService = {
       if (parsed.contactInfo?.phone === '+92 300 0000000' || !parsed.contactInfo?.phone || parsed.contactInfo?.phone === '+92 339 666733' && !parsed.contactInfo?.mapEmbedUrl) {
         parsed.contactInfo = { ...DEFAULT_SETTINGS.contactInfo };
         parsed.socialLinks = { ...DEFAULT_SETTINGS.socialLinks };
-        localStorage.setItem(SETTINGS_KEY, JSON.stringify(parsed));
       }
+      if (!parsed.paymentMethods) {
+        parsed.paymentMethods = { ...DEFAULT_SETTINGS.paymentMethods };
+      }
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(parsed));
       return { ...DEFAULT_SETTINGS, ...parsed };
     } catch {
       return { ...DEFAULT_SETTINGS };

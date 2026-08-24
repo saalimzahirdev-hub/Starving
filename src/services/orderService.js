@@ -97,6 +97,20 @@ export const orderService = {
     return orderService.updateStatus(id, 'cancelled', reason);
   },
 
+  updatePaymentStatus: (id, paymentStatus) => {
+    const orders = load();
+    const idx = orders.findIndex(o => o.id === id);
+    if (idx === -1) return null;
+    orders[idx].paymentStatus = paymentStatus;
+    save(orders);
+
+    window.dispatchEvent(new CustomEvent('starving:order_updated', { detail: orders[idx] }));
+    if (orderChannel) {
+      try { orderChannel.postMessage({ type: 'ORDER_UPDATED', order: orders[idx] }); } catch {}
+    }
+    return orders[idx];
+  },
+
   getTodayStats: () => {
     const orders = load();
     const today = new Date().toDateString();

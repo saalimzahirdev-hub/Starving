@@ -223,6 +223,161 @@ export default function AdminSettings() {
               </div>
             </div>
 
+            {/* Online Payment Methods (JazzCash & EasyPaisa) */}
+            <div className="glass-card p-5">
+              <SectionTitle icon={DollarSign} title="Payment Methods & Accounts" />
+              <div className="space-y-5">
+                {/* Cash on Delivery */}
+                <div className="p-3.5 rounded-xl border border-white/10 bg-white/3 flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-white text-sm">💵 Cash on Delivery (COD)</p>
+                    <p className="text-white/40 text-xs mt-0.5">Allow customers to pay cash when food arrives</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setForm(f => ({
+                      ...f,
+                      paymentMethods: {
+                        ...f.paymentMethods,
+                        cod: { ...f.paymentMethods?.cod, enabled: !f.paymentMethods?.cod?.enabled },
+                      },
+                    }))}
+                    className={`w-12 h-6 rounded-full transition-all relative ${form.paymentMethods?.cod?.enabled !== false ? 'bg-brand-gold' : 'bg-white/15'}`}
+                  >
+                    <motion.div
+                      animate={{ x: form.paymentMethods?.cod?.enabled !== false ? 26 : 2 }}
+                      transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+                      className="w-4 h-4 bg-white rounded-full absolute top-1"
+                    />
+                  </button>
+                </div>
+
+                {/* JazzCash Configuration */}
+                <div className="p-4 rounded-xl border border-orange-500/30 bg-orange-500/5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-bold text-orange-400 text-sm">🟠 JazzCash Online Payment</p>
+                      <p className="text-white/40 text-xs">Customer transfers via JazzCash and enters Transaction ID</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setForm(f => ({
+                        ...f,
+                        paymentMethods: {
+                          ...f.paymentMethods,
+                          jazzcash: { ...f.paymentMethods?.jazzcash, enabled: !f.paymentMethods?.jazzcash?.enabled },
+                        },
+                      }))}
+                      className={`w-12 h-6 rounded-full transition-all relative ${form.paymentMethods?.jazzcash?.enabled !== false ? 'bg-orange-500' : 'bg-white/15'}`}
+                    >
+                      <motion.div
+                        animate={{ x: form.paymentMethods?.jazzcash?.enabled !== false ? 26 : 2 }}
+                        transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+                        className="w-4 h-4 bg-white rounded-full absolute top-1"
+                      />
+                    </button>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-3 pt-2">
+                    <div>
+                      <label className="input-label">JazzCash Mobile / Account #</label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        placeholder="+92 339 666733"
+                        value={form.paymentMethods?.jazzcash?.accountNumber ?? (form.contactInfo?.whatsapp || '+92 339 666733')}
+                        onChange={e => setForm(f => ({
+                          ...f,
+                          paymentMethods: {
+                            ...f.paymentMethods,
+                            jazzcash: { ...f.paymentMethods?.jazzcash, accountNumber: e.target.value },
+                          },
+                        }))}
+                      />
+                    </div>
+                    <div>
+                      <label className="input-label">JazzCash Account Title</label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        placeholder="STARVING / Fast Food"
+                        value={form.paymentMethods?.jazzcash?.accountTitle ?? 'STARVING / Fast Food'}
+                        onChange={e => setForm(f => ({
+                          ...f,
+                          paymentMethods: {
+                            ...f.paymentMethods,
+                            jazzcash: { ...f.paymentMethods?.jazzcash, accountTitle: e.target.value },
+                          },
+                        }))}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* EasyPaisa Configuration */}
+                <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-bold text-emerald-400 text-sm">🟢 EasyPaisa Online Payment</p>
+                      <p className="text-white/40 text-xs">Customer transfers via EasyPaisa and enters Transaction ID</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setForm(f => ({
+                        ...f,
+                        paymentMethods: {
+                          ...f.paymentMethods,
+                          easypaisa: { ...f.paymentMethods?.easypaisa, enabled: !f.paymentMethods?.easypaisa?.enabled },
+                        },
+                      }))}
+                      className={`w-12 h-6 rounded-full transition-all relative ${form.paymentMethods?.easypaisa?.enabled !== false ? 'bg-emerald-500' : 'bg-white/15'}`}
+                    >
+                      <motion.div
+                        animate={{ x: form.paymentMethods?.easypaisa?.enabled !== false ? 26 : 2 }}
+                        transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+                        className="w-4 h-4 bg-white rounded-full absolute top-1"
+                      />
+                    </button>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-3 pt-2">
+                    <div>
+                      <label className="input-label">EasyPaisa Mobile / Account #</label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        placeholder="+92 339 666733"
+                        value={form.paymentMethods?.easypaisa?.accountNumber ?? (form.contactInfo?.whatsapp || '+92 339 666733')}
+                        onChange={e => setForm(f => ({
+                          ...f,
+                          paymentMethods: {
+                            ...f.paymentMethods,
+                            easypaisa: { ...f.paymentMethods?.easypaisa, accountNumber: e.target.value },
+                          },
+                        }))}
+                      />
+                    </div>
+                    <div>
+                      <label className="input-label">EasyPaisa Account Title</label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        placeholder="STARVING / Fast Food"
+                        value={form.paymentMethods?.easypaisa?.accountTitle ?? 'STARVING / Fast Food'}
+                        onChange={e => setForm(f => ({
+                          ...f,
+                          paymentMethods: {
+                            ...f.paymentMethods,
+                            easypaisa: { ...f.paymentMethods?.easypaisa, accountTitle: e.target.value },
+                          },
+                        }))}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Save button */}
             <button type="submit" disabled={saving} className="btn-gold w-full justify-center disabled:opacity-60" id="save-settings">
               {saving ? 'Saving...' : <><Save size={15} /> Save All Settings</>}

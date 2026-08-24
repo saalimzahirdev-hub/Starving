@@ -13,7 +13,7 @@ const slideVariants = {
     x: 0,
     opacity: 1,
     transition: {
-      x: { type: 'spring', stiffness: 280, damping: 30, duration: 0.6 },
+      x: { type: 'spring', stiffness: 280, damping: 30, duration: 0.55 },
       opacity: { duration: 0.35 },
     },
   },
@@ -21,7 +21,7 @@ const slideVariants = {
     x: direction > 0 ? '-100%' : '100%',
     opacity: 0,
     transition: {
-      x: { type: 'spring', stiffness: 280, damping: 30, duration: 0.6 },
+      x: { type: 'spring', stiffness: 280, damping: 30, duration: 0.55 },
       opacity: { duration: 0.35 },
     },
   }),
@@ -32,9 +32,7 @@ export default function DealsCarousel({ onDealClick }) {
   const slides = dealsData.slice(0, 5);
   const totalSlides = slides.length;
 
-  const [[currentIndex, direction], setPage] = useState([0, 0]);
-  const [isPaused, setIsPaused] = useState(false);
-  const timerRef = useRef(null);
+  const [[currentIndex, direction], setPage] = useState([0, 1]);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
 
@@ -52,22 +50,19 @@ export default function DealsCarousel({ onDealClick }) {
     setPage([slideIndex, newDirection]);
   };
 
-  // 3-second auto-slide interval (pauses on user interaction, resets on manual navigation)
+  // ── Permanent 3-second auto-slide interval (continuous uninterrupted loop) ──
   useEffect(() => {
-    if (isPaused || totalSlides === 0) return;
+    if (totalSlides === 0) return;
 
-    timerRef.current = setInterval(() => {
+    const interval = setInterval(() => {
       paginate(1);
-    }, 3000); // 3 seconds per slide
+    }, 3000); // 3 seconds permanent continuous slide motion
 
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [currentIndex, isPaused, paginate, totalSlides]);
+    return () => clearInterval(interval);
+  }, [currentIndex, paginate, totalSlides]);
 
   // Touch handlers for mobile swipe
   const handleTouchStart = (e) => {
-    setIsPaused(true);
     touchStartX.current = e.touches[0].clientX;
   };
 
@@ -76,7 +71,6 @@ export default function DealsCarousel({ onDealClick }) {
   };
 
   const handleTouchEnd = () => {
-    setIsPaused(false);
     const distance = touchStartX.current - touchEndX.current;
     const minSwipeDistance = 45; // 45px swipe threshold
 
@@ -98,8 +92,6 @@ export default function DealsCarousel({ onDealClick }) {
   return (
     <div
       className="relative w-full bg-[#121617] overflow-hidden select-none"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}

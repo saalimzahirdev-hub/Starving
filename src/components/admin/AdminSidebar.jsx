@@ -2,16 +2,18 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, ShoppingBag, UtensilsCrossed,
-  BarChart3, Settings, LogOut, X, Crown
+  BarChart3, Settings, LogOut, X, Crown, MessageSquare
 } from 'lucide-react';
 import Logo from '../ui/Logo';
 import { useAuth } from '../../context/AuthContext';
 import { useOrders } from '../../context/OrderContext';
+import { reviewService } from '../../services/reviewService';
 
 const navItems = [
   { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard, badge: null },
   { to: '/admin/orders',    label: 'Orders',    icon: ShoppingBag,     badge: 'pending' },
   { to: '/admin/menu',      label: 'Menu',      icon: UtensilsCrossed, badge: null },
+  { to: '/admin/reviews',   label: 'Reviews',   icon: MessageSquare,   badge: 'reviews' },
   { to: '/admin/reports',   label: 'Reports',   icon: BarChart3,       badge: null },
   { to: '/admin/settings',  label: 'Settings',  icon: Settings,        badge: null },
 ];
@@ -23,6 +25,7 @@ export default function AdminSidebar({ open, onClose }) {
   const navigate = useNavigate();
 
   const pendingCount = orders.filter(o => o.status === 'received').length;
+  const pendingReviewsCount = reviewService.getPending().length;
 
   const handleLogout = () => {
     logout();
@@ -50,7 +53,7 @@ export default function AdminSidebar({ open, onClose }) {
       {/* Nav */}
       <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
         {navItems.map(({ to, label, icon: Icon, badge }) => {
-          const badgeCount = badge === 'pending' ? pendingCount : 0;
+          const badgeCount = badge === 'pending' ? pendingCount : badge === 'reviews' ? pendingReviewsCount : 0;
           return (
             <NavLink
               key={to}

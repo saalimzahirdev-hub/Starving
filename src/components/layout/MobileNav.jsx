@@ -1,13 +1,14 @@
 import { useLocation, Link } from 'react-router-dom';
-import { Home, UtensilsCrossed, ShoppingCart, MapPin } from 'lucide-react';
+import { Home, UtensilsCrossed, ShoppingCart, MapPin, Flame } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useCart } from '../../context/CartContext';
 
 const tabs = [
-  { to: '/',            label: 'Home',    Icon: Home           },
-  { to: '/menu',        label: 'Menu',    Icon: UtensilsCrossed },
-  { to: '/cart',        label: 'Cart',    Icon: ShoppingCart   },
-  { to: '/track-order', label: 'Track',   Icon: MapPin         },
+  { to: '/',                    label: 'Home',    Icon: Home           },
+  { to: '/menu?category=Deals', label: 'Deals',   Icon: Flame          },
+  { to: '/menu',                label: 'Menu',    Icon: UtensilsCrossed },
+  { to: '/cart',                label: 'Cart',    Icon: ShoppingCart   },
+  { to: '/track-order',         label: 'Track',   Icon: MapPin         },
 ];
 
 
@@ -25,7 +26,9 @@ export default function MobileNav() {
       }}
     >
       {tabs.map(({ to, label, Icon }) => {
-        const active = location.pathname === to;
+        const active = to.includes('?')
+          ? (location.pathname + location.search === to)
+          : (location.pathname === to && (!location.search || to !== '/menu'));
         const showBadge = to === '/cart' && itemCount > 0;
         return (
           <Link

@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, SlidersHorizontal, X, ChevronDown } from 'lucide-react';
 import MenuCard from '../../components/ui/MenuCard';
+import DealCard from '../../components/ui/DealCard';
 import SkeletonCard from '../../components/ui/SkeletonCard';
 import { menuService } from '../../services/menuService';
 import { categories } from '../../data/menuData';
@@ -238,6 +239,17 @@ export default function MenuPage() {
               Clear Filters
             </button>
           </motion.div>
+        ) : activeCategory === 'Deals' ? (
+          <motion.div
+            layout
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            <AnimatePresence mode="popLayout">
+              {filtered.map((item, i) => (
+                <DealCard key={item.id} deal={item} index={i} />
+              ))}
+            </AnimatePresence>
+          </motion.div>
         ) : (
           <motion.div
             layout
@@ -245,7 +257,13 @@ export default function MenuPage() {
           >
             <AnimatePresence mode="popLayout">
               {filtered.map((item, i) => (
-                <MenuCard key={item.id} product={item} index={i} />
+                item.category === 'Deals' ? (
+                  <div key={item.id} className="col-span-2 sm:col-span-2 lg:col-span-2">
+                    <DealCard deal={item} index={i} />
+                  </div>
+                ) : (
+                  <MenuCard key={item.id} product={item} index={i} />
+                )
               ))}
             </AnimatePresence>
           </motion.div>

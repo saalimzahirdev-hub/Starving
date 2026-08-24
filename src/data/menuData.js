@@ -32,7 +32,14 @@ const WINGS_ADDONS = [
   { id: 'ranch-dip',     name: 'Ranch Dip',     price: 70  },
 ];
 
+import { dealsData } from './dealsData';
+
 export const menuData = [
+  // ============================================================
+  // DEALS & COMBOS (Launching & Permanent Deals)
+  // ============================================================
+  ...dealsData,
+
   // ============================================================
   // DRINKS
   // ============================================================
@@ -649,6 +656,7 @@ export const menuData = [
 // Category definitions with icons & order
 export const categories = [
   { id: 'all',     label: 'All Items', icon: '🍽️' },
+  { id: 'Deals',   label: '🔥 Deals',  icon: '🏷️' },
   { id: 'Burgers', label: 'Burgers',   icon: '🍔' },
   { id: 'Pizza',   label: 'Pizza',     icon: '🍕' },
   { id: 'Rolls',   label: 'Rolls',     icon: '🌯' },
@@ -658,6 +666,8 @@ export const categories = [
   { id: 'Sides',   label: 'Sides',     icon: '🍟' },
   { id: 'Drinks',  label: 'Drinks',    icon: '🥤' },
 ];
+
+export { dealsData };
 
 // Featured items for homepage carousel
 export const featuredItems = menuData.filter(item => item.isFeatured);

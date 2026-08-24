@@ -1,10 +1,20 @@
 // ============================================================
 // Order Service — Create, Read, Update with localStorage
+// Real-time synchronization across Customer & Admin Dashboard
 // ============================================================
-// Use crypto.randomUUID for zero-config UUID generation (built into modern browsers)
+
 const uuidv4 = () => crypto.randomUUID();
 
 const ORDERS_KEY = 'starving_orders';
+
+let orderChannel = null;
+try {
+  if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+    orderChannel = new BroadcastChannel('starving_orders_channel');
+  }
+} catch {
+  // BroadcastChannel fallback
+}
 
 const load = () => {
   try {
@@ -14,7 +24,9 @@ const load = () => {
   }
 };
 
-const save = (orders) => localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+const save = (orders) => {
+  localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+};
 
 export const ORDER_STATUSES = [
   { key: 'received',    label: 'Order Received',        icon: '✓',  color: '#4ade80' },
@@ -22,6 +34,7 @@ export const ORDER_STATUSES = [
   { key: 'ready',       label: 'Ready for Pickup',      icon: '📦', color: '#60a5fa' },
   { key: 'on_the_way',  label: 'On the Way',            icon: '🛵', color: '#a78bfa' },
   { key: 'delivered',   label: 'Delivered',             icon: '✓',  color: '#4ade80' },
+  { key: 'cancelled',   label: 'Cancelled',             icon: '✕',  color: '#f87171' },
 ];
 
 export const orderService = {
@@ -42,12 +55,19 @@ export const orderService = {
       status: 'received',
       statusHistory: [{ status: 'received', timestamp: new Date().toISOString() }],
       createdAt: new Date().toISOString(),
-      estimatedTime: 30, // minutes
+      estimatedTime: orderData.estimatedTime || 30, // minutes
     };
     orders.unshift(order);
     save(orders);
-    // Dispatch event so admin panel can pick it up
+
+    // 1. Dispatch custom in-memory event
     window.dispatchEvent(new CustomEvent('starving:new_order', { detail: order }));
+
+    // 2. Broadcast across tabs and windows
+    if (orderChannel) {
+      orderChannel.postMessage({ type: 'NEW_ORDER', order });
+    }
+
     return order;
   },
 
@@ -64,7 +84,12 @@ export const orderService = {
       orders[idx].deliveredAt = new Date().toISOString();
     }
     save(orders);
+
     window.dispatchEvent(new CustomEvent('starving:order_updated', { detail: orders[idx] }));
+    if (orderChannel) {
+      orderChannel.postMessage({ type: 'ORDER_UPDATED', order: orders[idx] });
+    }
+
     return orders[idx];
   },
 

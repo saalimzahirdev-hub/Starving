@@ -6,6 +6,8 @@ import { useApp } from '../../context/AppContext';
 const quickLinks = [
   { to: '/',              label: 'Home'          },
   { to: '/menu',          label: 'Menu'          },
+  { to: '/our-story',     label: 'Our Story'     },
+  { to: '/reviews',       label: 'Reviews'       },
   { to: '/cart',          label: 'Cart'          },
   { to: '/contact',       label: 'Contact Us'    },
   { to: '/track-order',   label: 'Track Order'   },

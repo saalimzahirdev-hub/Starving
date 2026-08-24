@@ -69,6 +69,8 @@ export const menuService = {
     return items.filter(item => item.category === category);
   },
 
+  getDeals: () => initMenu().filter(item => item.category === 'Deals' || item.isLaunchingDeal),
+
   getAvailable: () => initMenu().filter(item => item.isAvailable),
 
   create: (item) => {

@@ -39,9 +39,10 @@ export default function AdminLogin() {
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
             <img
-              src="/images/logo/Screenshot 2026-08-22 112432.png"
+              src="/Logo/WhatsApp Image 2026-08-23 at 6.04.34 PM.jpeg"
               alt="STARVING"
-              className="w-24 object-contain drop-shadow-[0_0_20px_rgba(201,168,76,0.5)]"
+              className="w-20 object-contain rounded-xl drop-shadow-[0_0_20px_rgba(201,168,76,0.6)]"
+              onError={(e) => { e.target.style.display = 'none'; }}
             />
           </div>
           <h1 className="font-brand text-3xl text-brand-gold tracking-widest">STARVING</h1>

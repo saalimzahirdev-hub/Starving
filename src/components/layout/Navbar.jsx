@@ -2,14 +2,17 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, Menu, X, Phone } from 'lucide-react';
-import Logo from '../ui/Logo';
+import Logo, { NavLogo } from '../ui/Logo';
 import { useCart } from '../../context/CartContext';
 import { useApp } from '../../context/AppContext';
 
 const navLinks = [
-  { to: '/',         label: 'Home'    },
-  { to: '/menu',     label: 'Menu'    },
-  { to: '/contact',  label: 'Contact' },
+  { to: '/',                    label: 'Home'      },
+  { to: '/menu?category=Deals', label: '🔥 Deals',  isDeal: true },
+  { to: '/menu',                label: 'Menu'      },
+  { to: '/our-story',           label: 'Our Story' },
+  { to: '/reviews',             label: '⭐ Reviews' },
+  { to: '/contact',             label: 'Contact'   },
 ];
 
 export default function Navbar() {
@@ -27,7 +30,12 @@ export default function Navbar() {
 
   useEffect(() => setMobileOpen(false), [location.pathname]);
 
-  const isActive = (to) => location.pathname === to;
+  const isActive = (to) => {
+    if (to.includes('?')) {
+      return location.pathname + location.search === to;
+    }
+    return location.pathname === to && (!location.search || to !== '/menu');
+  };
 
   return (
     <>
@@ -45,10 +53,8 @@ export default function Navbar() {
         }}
       >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex-shrink-0">
-            <Logo size="sm" />
-          </Link>
+          {/* Logo — hover/tap to reveal STARVING name */}
+          <NavLogo />
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">

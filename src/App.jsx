@@ -18,6 +18,8 @@ import CartPage      from './pages/customer/Cart';
 import Checkout      from './pages/customer/Checkout';
 import OrderTracking from './pages/customer/OrderTracking';
 import Contact       from './pages/customer/Contact';
+import OurStory      from './pages/customer/OurStory';
+import Reviews       from './pages/customer/Reviews';
 
 // Admin pages
 import AdminLogin     from './pages/admin/AdminLogin';
@@ -26,6 +28,7 @@ import AdminOrders    from './pages/admin/AdminOrders';
 import AdminMenu      from './pages/admin/AdminMenu';
 import AdminReports   from './pages/admin/AdminReports';
 import AdminSettings  from './pages/admin/AdminSettings';
+import AdminReviews   from './pages/admin/AdminReviews';
 
 // Wrapper for all customer-facing pages (with navbar/footer)
 function CustomerLayout({ children }) {
@@ -72,6 +75,8 @@ export default function App() {
                 <Route path="/track-order" element={<CustomerLayout><OrderTracking /></CustomerLayout>} />
                 <Route path="/track-order/:orderId" element={<CustomerLayout><OrderTracking /></CustomerLayout>} />
                 <Route path="/contact" element={<CustomerLayout><Contact /></CustomerLayout>} />
+                <Route path="/our-story" element={<CustomerLayout><OurStory /></CustomerLayout>} />
+                <Route path="/reviews" element={<CustomerLayout><Reviews /></CustomerLayout>} />
 
                 {/* ─── Admin Routes ─── */}
                 <Route path="/admin" element={<AdminLogin />} />
@@ -89,6 +94,9 @@ export default function App() {
                 } />
                 <Route path="/admin/settings" element={
                   <ProtectedRoute><AdminSettings /></ProtectedRoute>
+                } />
+                <Route path="/admin/reviews" element={
+                  <ProtectedRoute><AdminReviews /></ProtectedRoute>
                 } />
 
                 {/* ─── Fallback ─── */}

@@ -1,0 +1,155 @@
+// ============================================================
+// STARVING — Deals & Combos Data
+// High-resolution posters from Images/Deals
+// Permanent Deals architecture supporting launching & seasonal deals
+// ============================================================
+
+export const dealsData = [
+  {
+    id: 'deal-pizza-feast',
+    name: '2 Small Pizzas (7") + 500ml Drink',
+    badge: 'Launching Deal',
+    tagline: 'Double Pizza Feast',
+    category: 'Deals',
+    shortDescription: '2 Small 7" Pizzas with 500ml Chilled Drink',
+    description: 'Exclusive Launching Deal: Any 2 Small (7") fresh-baked stone-oven style Pizzas served with a chilled 500ml drink. Royal crust and rich melted cheese at an unbeatable launch price!',
+    image: '/Deals/WhatsApp Image 2026-08-23 at 6.03.40 PM.jpeg',
+    price: 999,
+    originalPrice: 1350,
+    discount: 26,
+    isAvailable: true,
+    isPopular: true,
+    isFeatured: true,
+    isLaunchingDeal: true,
+    itemsIncluded: [
+      '2x Small Pizzas (7" Fresh Crust)',
+      '1x 500ml Chilled Soft Drink',
+    ],
+    variants: [
+      { size: 'Combo Pack', label: 'Complete Deal Pack', price: 999, originalPrice: 1350 },
+    ],
+    addons: [
+      { id: 'extra-cheese',  name: 'Extra Cheese on Both', price: 150 },
+      { id: 'garlic-mayo',   name: 'Special Garlic Dip',   price: 60  },
+      { id: 'upgrade-15l',   name: 'Upgrade to 1.5L Drink',price: 80  },
+    ],
+  },
+  {
+    id: 'deal-burger-squad',
+    name: '4 Zinger Burgers + 1L Drink',
+    badge: 'Launching Deal',
+    tagline: 'Mega Burger Squad',
+    category: 'Deals',
+    shortDescription: '4 Crispy Zinger Burgers with 1 Litre Chilled Drink',
+    description: 'Exclusive Launching Deal: 4 golden, crispy, signature Zinger Burgers loaded with crisp iceberg lettuce and royal secret sauce, paired with a 1 Litre cold drink for the squad.',
+    image: '/Deals/WhatsApp Image 2026-08-23 at 6.03.41 PM (1).jpeg',
+    price: 1495,
+    originalPrice: 1999,
+    discount: 25,
+    isAvailable: true,
+    isPopular: true,
+    isFeatured: true,
+    isLaunchingDeal: true,
+    itemsIncluded: [
+      '4x Signature Crispy Zinger Burgers',
+      '1x 1.0 Litre Chilled Drink',
+    ],
+    variants: [
+      { size: 'Squad Pack', label: '4 Burgers + 1L Drink', price: 1495, originalPrice: 1999 },
+    ],
+    addons: [
+      { id: 'extra-cheese',  name: 'Add Cheese to All 4',  price: 160 },
+      { id: 'jalapenos',     name: 'Extra Jalapeños',      price: 50  },
+      { id: 'garlic-fries',  name: 'Add Large Fries',      price: 200 },
+    ],
+  },
+  {
+    id: 'deal-royal-platter',
+    name: 'Royal Platter (Kabuli Rice + Whole Chicken Shawaya)',
+    badge: 'Launching Deal',
+    tagline: 'The King’s Feast',
+    category: 'Deals',
+    shortDescription: 'Aromatic Kabuli Rice + Roasted Chicken Shawaya + Special Chutneys & Drink',
+    description: 'Exclusive Launching Deal: A royal feast featuring fragrant Kabuli Rice garnished with almonds & raisins, succulent golden-roasted Chicken Shawaya, traditional mint & spicy chutneys, and a drink.',
+    image: '/Deals/WhatsApp Image 2026-08-23 at 6.03.41 PM.jpeg',
+    price: 1595,
+    originalPrice: 2150,
+    discount: 26,
+    isAvailable: true,
+    isPopular: true,
+    isFeatured: true,
+    isLaunchingDeal: true,
+    itemsIncluded: [
+      'Fragrant Kabuli Pulao / Rice with Dry Fruits',
+      'Full Roasted Juicy Chicken Shawaya',
+      'Special Mint & Spicy Tomato Chutneys',
+      'Chilled Soft Drink',
+    ],
+    variants: [
+      { size: 'Platter', label: 'Full Royal Platter', price: 1595, originalPrice: 2150 },
+    ],
+    addons: [
+      { id: 'extra-rice',    name: 'Extra Kabuli Rice',    price: 250 },
+      { id: 'extra-chutney', name: 'Extra Chutney Trio',   price: 70  },
+      { id: 'cold-drink-15l',name: '1.5L Chilled Drink',   price: 200 },
+    ],
+  },
+  {
+    id: 'deal-duo-wraps',
+    name: '2 Wraps + 500ml Drink',
+    badge: 'Launching Deal',
+    tagline: 'Grilled Chicken Duo',
+    category: 'Deals',
+    shortDescription: '2 Grilled Chicken & Creamy Sauce Wraps with 500ml Drink',
+    description: 'Exclusive Launching Deal: 2 freshly toasted soft tortilla wraps stuffed with juicy flame-grilled chicken, fresh crisp veggies, and signature creamy sauce + 500ml chilled drink.',
+    image: '/Deals/WhatsApp Image 2026-08-24 at 1.54.12 PM.jpeg',
+    price: 999,
+    originalPrice: 1350,
+    discount: 26,
+    isAvailable: true,
+    isPopular: true,
+    isFeatured: true,
+    isLaunchingDeal: true,
+    itemsIncluded: [
+      '2x Flame-Grilled Chicken Creamy Wraps',
+      '1x 500ml Chilled Drink',
+    ],
+    variants: [
+      { size: 'Duo Pack', label: '2 Wraps + 500ml Drink', price: 999, originalPrice: 1350 },
+    ],
+    addons: [
+      { id: 'extra-cheese',  name: 'Extra Melted Cheese',  price: 80 },
+      { id: 'spicy-kick',    name: 'Spicy Peri Peri Dip',  price: 50 },
+    ],
+  },
+  {
+    id: 'deal-boom-boom-duo',
+    name: '2 Boom Boom Roll XL + 500ml Drink',
+    badge: 'Launching Deal',
+    tagline: 'Boom Boom Sensation',
+    category: 'Deals',
+    shortDescription: '2 Signature Boom Boom Rolls XL with 500ml Drink',
+    description: 'Exclusive Launching Deal: 2 XL flaky paratha rolls packed with succulent spiced chicken chunks, signature boom boom sauce, mint dressing, and sliced onions + 500ml drink.',
+    image: '/Deals/WhatsApp Image 2026-08-24 at 1.54.13 PM.jpeg',
+    price: 999,
+    originalPrice: 1350,
+    discount: 26,
+    isAvailable: true,
+    isPopular: true,
+    isFeatured: true,
+    isLaunchingDeal: true,
+    itemsIncluded: [
+      '2x Boom Boom Paratha Roll XL',
+      '1x 500ml Chilled Drink',
+    ],
+    variants: [
+      { size: 'Roll Duo', label: '2 XL Rolls + 500ml Drink', price: 999, originalPrice: 1350 },
+    ],
+    addons: [
+      { id: 'extra-sauce',   name: 'Extra Boom Boom Sauce',price: 50 },
+      { id: 'extra-cheese',  name: 'Cheese Melt Layer',    price: 80 },
+    ],
+  },
+];
+
+export default dealsData;

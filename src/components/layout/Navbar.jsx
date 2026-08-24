@@ -46,10 +46,10 @@ export default function Navbar() {
         className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
         style={{
           background: scrolled
-            ? 'rgba(10,35,24,0.96)'
+            ? 'rgba(10,38,34,0.96)'
             : 'transparent',
           backdropFilter: scrolled ? 'blur(20px)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(201,168,76,0.12)' : '1px solid transparent',
+          borderBottom: scrolled ? '1px solid rgba(201,168,76,0.15)' : '1px solid transparent',
         }}
       >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">

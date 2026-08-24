@@ -97,15 +97,28 @@ export default function DealsCarousel({ onDealClick }) {
 
   return (
     <div
-      className="relative w-full bg-[#05130d] overflow-hidden select-none"
+      className="relative w-full bg-[#121617] overflow-hidden select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      {/* ── Restaurant Theme Background (from item placing area) ── */}
+      <div
+        className="absolute inset-0 bg-cover bg-center pointer-events-none opacity-45"
+        style={{
+          backgroundImage: `url('/Menu/Item placing Area.jpg')`,
+          backgroundPosition: 'center 40%',
+        }}
+      />
+
+      {/* ── Persian Green & Charcoal Gradient Blend ── */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#051815]/75 via-[#0a2822]/50 to-[#121617] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,166,147,0.12)_0%,rgba(18,22,23,0.5)_60%,rgba(18,22,23,0.92)_100%)] pointer-events-none" />
+
       {/* ── Carousel Banner Container (Mobile responsive heights) ── */}
-      <div className="relative w-full h-[280px] sm:h-[400px] md:h-[480px] lg:h-[560px] xl:h-[620px] flex items-center justify-center overflow-hidden">
+      <div className="relative z-10 w-full h-[280px] sm:h-[400px] md:h-[480px] lg:h-[560px] xl:h-[620px] flex items-center justify-center overflow-hidden">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={currentIndex}
@@ -116,10 +129,10 @@ export default function DealsCarousel({ onDealClick }) {
             exit="exit"
             className="absolute inset-0 w-full h-full flex items-center justify-center"
           >
-            {/* Ambient natural image background matching flyer */}
+            {/* Ambient natural image glow matching current deal flyer */}
             {currentDeal?.image && (
               <div
-                className="absolute inset-0 bg-cover bg-center blur-3xl opacity-30 scale-110 pointer-events-none"
+                className="absolute inset-0 bg-cover bg-center blur-3xl opacity-25 scale-105 pointer-events-none"
                 style={{ backgroundImage: `url('${currentDeal.image}')` }}
               />
             )}
@@ -129,7 +142,7 @@ export default function DealsCarousel({ onDealClick }) {
               <img
                 src={currentDeal.image}
                 alt={currentDeal.name || `Deal ${currentIndex + 1}`}
-                className="relative z-10 w-full h-full object-contain object-center drop-shadow-[0_10px_35px_rgba(0,0,0,0.85)] cursor-pointer"
+                className="relative z-10 w-full h-full object-contain object-center drop-shadow-[0_12px_40px_rgba(0,0,0,0.95)] cursor-pointer"
                 onClick={() => onDealClick && onDealClick(currentDeal)}
                 loading="eager"
                 draggable={false}

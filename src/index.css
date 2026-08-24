@@ -8,21 +8,21 @@
    CSS CUSTOM PROPERTIES — STARVING DESIGN SYSTEM
    ============================================= */
 :root {
-  --green-950:     #061610;
-  --green-dark:    #0a2318;
-  --green-default: #0d3520;
-  --green-mid:     #1a5c35;
-  --green-light:   #27904e;
+  --green-950:     #051815;
+  --green-dark:    #0a2822;
+  --green-default: #0f3d35;
+  --green-mid:     #008b7a;
+  --green-light:   #00a693;
   --gold-dark:     #a8882e;
   --gold-default:  #c9a84c;
   --gold-light:    #e8c97a;
-  --surface:       #111815;
-  --surface-card:  #16211a;
-  --surface-hover: #1c2b22;
-  --surface-glass: rgba(13, 53, 32, 0.55);
+  --surface:       #121617;
+  --surface-card:  #161e1b;
+  --surface-hover: #1c2824;
+  --surface-glass: rgba(15, 61, 53, 0.6);
   --border-gold:   rgba(201, 168, 76, 0.18);
-  --border-green:  rgba(39, 144, 78, 0.2);
-  --shadow-card:   0 4px 24px rgba(0,0,0,0.45);
+  --border-green:  rgba(0, 166, 147, 0.22);
+  --shadow-card:   0 4px 24px rgba(0,0,0,0.55);
   --shadow-gold:   0 0 24px rgba(201,168,76,0.25);
   --radius-card:   16px;
   --radius-btn:    10px;

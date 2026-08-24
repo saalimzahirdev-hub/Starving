@@ -20,7 +20,7 @@ export default function MobileNav() {
     <nav
       className="fixed bottom-0 inset-x-0 z-50 md:hidden flex items-center justify-around px-2 h-16"
       style={{
-        background: 'rgba(10,35,24,0.97)',
+        background: 'rgba(10,38,34,0.97)',
         backdropFilter: 'blur(20px)',
         borderTop: '1px solid rgba(201,168,76,0.15)',
       }}

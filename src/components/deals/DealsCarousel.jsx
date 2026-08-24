@@ -96,21 +96,21 @@ export default function DealsCarousel({ onDealClick }) {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* ── Restaurant Theme Background (from item placing area) ── */}
+      {/* ── Royal Persian Green & Gold Geometric Theme Background ── */}
       <div
-        className="absolute inset-0 bg-cover bg-center pointer-events-none opacity-45"
+        className="absolute inset-0 bg-cover bg-center pointer-events-none opacity-85"
         style={{
-          backgroundImage: `url('/Menu/Item placing Area.jpg')`,
-          backgroundPosition: 'center 40%',
+          backgroundImage: `url('/Theme/Gemini_Generated_Image_9n42wn9n42wn9n42.jpg')`,
+          backgroundPosition: 'center 30%',
         }}
       />
 
-      {/* ── Persian Green & Charcoal Gradient Blend ── */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#051815]/75 via-[#0a2822]/50 to-[#121617] pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,166,147,0.12)_0%,rgba(18,22,23,0.5)_60%,rgba(18,22,23,0.92)_100%)] pointer-events-none" />
+      {/* ── Ambient Glow & Edge Vignette ── */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#051815]/50 via-transparent to-[#121617] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(5,24,21,0.65)_85%,rgba(18,22,23,0.95)_100%)] pointer-events-none" />
 
       {/* ── Carousel Banner Container (Mobile responsive heights) ── */}
-      <div className="relative z-10 w-full h-[280px] sm:h-[400px] md:h-[480px] lg:h-[560px] xl:h-[620px] flex items-center justify-center overflow-hidden">
+      <div className="relative z-10 w-full h-[300px] sm:h-[420px] md:h-[500px] lg:h-[580px] xl:h-[640px] flex items-center justify-center overflow-hidden">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={currentIndex}

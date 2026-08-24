@@ -77,23 +77,16 @@ export default function Home() {
           ================================================ */}
       <DealsCarousel onDealClick={(deal) => setSelectedDealModal(deal)} />
 
-
-
       {/* ================================================
-          PERMANENT DEALS SECTION (Featuring Launching Deals)
+          MAIN PRODUCTS & SIGNATURE ITEMS
           ================================================ */}
-      <DealsSection />
-
-      {/* ================================================
-          FEATURED MENU SECTION (Royal Picks)
-          ================================================ */}
-      <Section id="featured" className="py-20 px-4">
+      <Section id="signature-items" className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <motion.div className="text-center mb-12" {...fadeUp()}>
-            <span className="section-tag"><Crown size={12} /> Featured</span>
-            <h2 className="section-title">Royal Picks</h2>
+            <span className="section-tag"><Crown size={12} /> Signature Collection</span>
+            <h2 className="section-title">Main Products & <span className="text-gold">Signature Picks</span></h2>
             <p className="section-subtitle mx-auto text-center">
-              Our most beloved dishes — crafted for those who refuse to settle for anything less than extraordinary.
+              Our most craved signature dishes — handcrafted with royal precision, premium ingredients, and legendary flavors.
             </p>
           </motion.div>
 
@@ -110,6 +103,11 @@ export default function Home() {
           </motion.div>
         </div>
       </Section>
+
+      {/* ================================================
+          PERMANENT DEALS SECTION (Featuring Launching Deals)
+          ================================================ */}
+      <DealsSection />
 
       {/* ================================================
           OUR STORY TEASER (links to full page)

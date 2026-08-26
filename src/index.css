@@ -41,6 +41,12 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  overflow-x: hidden;
+}
+
+/* Remove tap flash on iOS/Android */
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -51,6 +57,8 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* iOS safe area padding for home bar */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* Custom Scrollbar */
@@ -139,6 +147,8 @@ h1, h2, h3, h4, h5, h6 {
   transition: var(--transition);
   text-transform: uppercase;
   white-space: nowrap;
+  touch-action: manipulation;
+  min-height: 44px; /* iOS minimum tap target */
 }
 .btn-gold:hover {
   background-position: right center;
@@ -166,6 +176,8 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   transition: var(--transition);
   text-transform: uppercase;
+  touch-action: manipulation;
+  min-height: 44px;
 }
 .btn-outline-gold:hover {
   background: rgba(201,168,76,0.1);
@@ -218,14 +230,15 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
   border: 1px solid var(--border-gold);
   background: var(--surface-card);
   color: var(--gold-default);
   cursor: pointer;
   transition: var(--transition);
+  touch-action: manipulation;
 }
 .icon-btn:hover {
   background: var(--surface-hover);
@@ -363,7 +376,30 @@ h1, h2, h3, h4, h5, h6 {
    ============================================= */
 @media (max-width: 768px) {
   body {
-    padding-bottom: 72px;
+    /* Stack: mobile nav (64px) + iOS safe area */
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Tighter button padding on very small screens */
+  .btn-gold,
+  .btn-outline-gold {
+    padding: 11px 20px;
+    font-size: 0.8rem;
+  }
+
+  /* Prevent horizontal overflow inside cards */
+  .glass-card {
+    overflow: hidden;
+  }
+
+  /* Qty stepper — bigger tap targets on mobile */
+  .qty-stepper button {
+    width: 36px;
+    height: 36px;
+  }
+  .qty-stepper span {
+    min-width: 40px;
+    height: 36px;
   }
 }
 

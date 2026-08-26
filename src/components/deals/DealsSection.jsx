@@ -31,7 +31,7 @@ export default function DealsSection() {
   }, []);
 
   return (
-    <section id="deals" className="relative py-24 px-4 overflow-hidden bg-gradient-to-b from-[#061610] via-[#092117] to-[#061610]">
+    <section id="deals" className="relative py-16 sm:py-24 px-4 overflow-hidden bg-gradient-to-b from-[#061610] via-[#092117] to-[#061610]">
       {/* Decorative ambient background glows */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-gold/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute -bottom-20 right-0 w-[400px] h-[400px] bg-green-500/5 rounded-full blur-[120px] pointer-events-none" />
@@ -87,7 +87,7 @@ export default function DealsSection() {
               <Crown size={24} />
             </div>
             <div>
-              <h4 className="font-brand text-lg text-white">Want to explore our complete culinary collection?</h4>
+              <h4 className="font-brand text-base sm:text-lg text-white">Want to explore our complete culinary collection?</h4>
               <p className="text-white/60 text-xs mt-0.5">Discover 50+ handcrafted burgers, pizzas, rolls, pasta, wings & more.</p>
             </div>
           </div>

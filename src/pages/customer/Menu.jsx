@@ -88,6 +88,11 @@ export default function MenuPage() {
       );
     }
 
+    // Category display order for "All Items" default sort
+    const CATEGORY_ORDER = [
+      'Deals', 'Burgers', 'Pizza', 'Pasta', 'Rolls', 'Wraps', 'Wings', 'Sides', 'Drinks',
+    ];
+
     // Sort
     switch (sort) {
       case 'price-asc':
@@ -103,8 +108,18 @@ export default function MenuPage() {
         result.sort((a, b) => a.name.localeCompare(b.name));
         break;
       default:
-        // featured first
-        result.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
+        // In "All Items": group by category order, then featured-first within each group
+        if (activeCategory === 'all') {
+          result.sort((a, b) => {
+            const catA = CATEGORY_ORDER.indexOf(a.category);
+            const catB = CATEGORY_ORDER.indexOf(b.category);
+            const catDiff = (catA === -1 ? 99 : catA) - (catB === -1 ? 99 : catB);
+            if (catDiff !== 0) return catDiff;
+            return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0);
+          });
+        } else {
+          result.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
+        }
     }
 
     return result;
@@ -250,6 +265,43 @@ export default function MenuPage() {
               ))}
             </AnimatePresence>
           </motion.div>
+        ) : activeCategory === 'all' ? (
+          // "All Items" — deals in their own grid first, then regular items
+          <div className="space-y-10">
+            {filtered.some(i => i.category === 'Deals') && (
+              <div>
+                <h2 className="font-brand text-lg text-brand-gold mb-4 flex items-center gap-2">
+                  🔥 Deals &amp; Combos
+                </h2>
+                <motion.div
+                  layout
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                >
+                  <AnimatePresence mode="popLayout">
+                    {filtered
+                      .filter(i => i.category === 'Deals')
+                      .map((item, i) => (
+                        <DealCard key={item.id} deal={item} index={i} />
+                      ))}
+                  </AnimatePresence>
+                </motion.div>
+              </div>
+            )}
+            {filtered.some(i => i.category !== 'Deals') && (
+              <motion.div
+                layout
+                className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+              >
+                <AnimatePresence mode="popLayout">
+                  {filtered
+                    .filter(i => i.category !== 'Deals')
+                    .map((item, i) => (
+                      <MenuCard key={item.id} product={item} index={i} />
+                    ))}
+                </AnimatePresence>
+              </motion.div>
+            )}
+          </div>
         ) : (
           <motion.div
             layout
@@ -257,13 +309,7 @@ export default function MenuPage() {
           >
             <AnimatePresence mode="popLayout">
               {filtered.map((item, i) => (
-                item.category === 'Deals' ? (
-                  <div key={item.id} className="col-span-2 sm:col-span-2 lg:col-span-2">
-                    <DealCard deal={item} index={i} />
-                  </div>
-                ) : (
-                  <MenuCard key={item.id} product={item} index={i} />
-                )
+                <MenuCard key={item.id} product={item} index={i} />
               ))}
             </AnimatePresence>
           </motion.div>

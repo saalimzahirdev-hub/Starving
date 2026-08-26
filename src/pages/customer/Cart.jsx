@@ -100,7 +100,7 @@ export default function CartPage() {
                   className="glass-card p-4 flex gap-4"
                 >
                   {/* Image */}
-                  <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-surface-card">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex-shrink-0 bg-surface-card">
                     <img
                       src={item.image}
                       alt={item.name}
@@ -111,8 +111,8 @@ export default function CartPage() {
                   </div>
 
                   {/* Info */}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-white text-sm leading-snug truncate">{item.name}</h3>
+                  <div className="flex-1 min-w-0 overflow-hidden">
+                    <h3 className="font-semibold text-white text-xs sm:text-sm leading-snug truncate">{item.name}</h3>
                     <p className="text-white/40 text-xs mt-0.5">{item.sizeLabel}</p>
                     {item.addons?.length > 0 && (
                       <p className="text-white/30 text-xs mt-0.5">

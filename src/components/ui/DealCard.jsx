@@ -93,7 +93,7 @@ export default function DealCard({ deal, index = 0 }) {
         </div>
 
         {/* Card Body */}
-        <div className="p-5 flex flex-col flex-1 justify-between gap-4">
+        <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-3 sm:gap-4">
           <div>
             {/* Tagline */}
             {deal.tagline && (
@@ -105,7 +105,7 @@ export default function DealCard({ deal, index = 0 }) {
             {/* Deal Title */}
             <h3
               onClick={() => setShowModal(true)}
-              className="font-brand text-xl text-white group-hover:text-brand-gold transition-colors cursor-pointer leading-tight mb-2"
+              className="font-brand text-lg sm:text-xl text-white group-hover:text-brand-gold transition-colors cursor-pointer leading-tight mb-2"
             >
               {deal.name}
             </h3>
@@ -135,7 +135,7 @@ export default function DealCard({ deal, index = 0 }) {
           <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-3">
             <div>
               <div className="flex items-baseline gap-2">
-                <span className="font-brand text-2xl text-brand-gold font-bold">
+                <span className="font-brand text-xl sm:text-2xl text-brand-gold font-bold">
                   {formatPrice(variant.price)}
                 </span>
                 {variant.originalPrice > variant.price && (

@@ -10,6 +10,7 @@ import Navbar   from './components/layout/Navbar';
 import Footer   from './components/layout/Footer';
 import MobileNav from './components/layout/MobileNav';
 import FloatingWhatsApp from './components/ui/FloatingWhatsApp';
+import ScrollToTop      from './components/utils/ScrollToTop';
 
 // Customer pages
 import Home          from './pages/customer/Home';
@@ -49,6 +50,7 @@ function CustomerLayout({ children }) {
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <AppProvider>
         <AuthProvider>
           <OrderProvider>

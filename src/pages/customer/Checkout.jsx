@@ -205,7 +205,7 @@ export default function Checkout() {
         <form onSubmit={handleSubmit}>
           <div className="grid lg:grid-cols-[1fr_360px] gap-6">
             {/* Left: Customer Details & Payment Options */}
-            <div className="space-y-6">
+            <div className="space-y-6 order-2 lg:order-1">
               {/* Contact Info */}
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="glass-card p-5">
                 <h2 className="font-semibold text-white mb-4 flex items-center gap-2">
@@ -403,7 +403,7 @@ export default function Checkout() {
                           <div className="flex items-center justify-between">
                             <span className="text-xs text-white/50">Account Number / Mobile</span>
                             <div className="flex items-center gap-2">
-                              <span className="font-mono font-bold text-sm sm:text-base text-white tracking-wide">
+                              <span className="font-mono font-bold text-sm sm:text-base text-white tracking-wide break-all">
                                 {payment === 'jazzcash'
                                   ? (paymentConfig.jazzcash?.accountNumber || '+92 339 666733')
                                   : (paymentConfig.easypaisa?.accountNumber || '+92 339 666733')}
@@ -445,9 +445,9 @@ export default function Checkout() {
                         {/* Transaction ID Input */}
                         <div className="space-y-3">
                           <div>
-                            <label className="input-label flex items-center justify-between">
-                              <span>Transaction ID (TID) / Reference # *</span>
-                              <span className="text-[10px] text-white/40">From SMS / App receipt</span>
+                            <label className="input-label flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                              <span>Transaction ID (TID) / Ref # *</span>
+                              <span className="text-[10px] text-white/40 normal-case font-normal">From SMS / App receipt</span>
                             </label>
                             <input
                               type="text"
@@ -482,7 +482,7 @@ export default function Checkout() {
             </div>
 
             {/* Right: Order Review */}
-            <div className="space-y-4">
+            <div className="space-y-4 order-1 lg:order-2">
               <div className="glass-card p-5">
                 <h2 className="font-semibold text-white mb-4">Order Review</h2>
                 <div className="space-y-3 max-h-64 overflow-y-auto pr-1">

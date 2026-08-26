@@ -18,13 +18,16 @@ export default function MobileNav() {
 
   return (
     <nav
-      className="fixed bottom-0 inset-x-0 z-50 md:hidden flex items-center justify-around px-2 h-16"
+      className="fixed bottom-0 inset-x-0 z-50 md:hidden flex items-center justify-around px-2"
       style={{
         background: 'rgba(10,38,34,0.97)',
         backdropFilter: 'blur(20px)',
         borderTop: '1px solid rgba(201,168,76,0.15)',
+        height: 'calc(64px + env(safe-area-inset-bottom, 0px))',
+        paddingBottom: 'env(safe-area-inset-bottom, 0px)',
       }}
     >
+
       {tabs.map(({ to, label, Icon }) => {
         const active = to.includes('?')
           ? (location.pathname + location.search === to)

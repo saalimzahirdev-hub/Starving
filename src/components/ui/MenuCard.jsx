@@ -45,7 +45,7 @@ export default function MenuCard({ product, index = 0 }) {
         onKeyDown={e => e.key === 'Enter' && setShowModal(true)}
       >
         {/* Image */}
-        <div className="relative h-44 overflow-hidden bg-surface-card">
+        <div className="relative h-36 sm:h-44 overflow-hidden bg-surface-card">
           {!imgErr ? (
             <img
               src={product.image}
@@ -88,7 +88,7 @@ export default function MenuCard({ product, index = 0 }) {
 
         {/* Content */}
         <div className="p-4">
-          <h3 className="font-semibold text-white group-hover:text-brand-gold transition-colors duration-200 text-base leading-snug">
+          <h3 className="font-semibold text-white group-hover:text-brand-gold transition-colors duration-200 text-sm sm:text-base leading-snug">
             {product.name}
           </h3>
           <p className="text-white/50 text-xs mt-1 leading-relaxed line-clamp-2">
@@ -122,7 +122,7 @@ export default function MenuCard({ product, index = 0 }) {
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={e => { e.stopPropagation(); setShowModal(true); }}
-              className="w-9 h-9 rounded-xl bg-brand-gold/20 border border-brand-gold/30 flex items-center justify-center text-brand-gold hover:bg-brand-gold/30 transition-all group-hover:bg-brand-gold group-hover:text-surface"
+              className="w-10 h-10 rounded-xl bg-brand-gold/20 border border-brand-gold/30 flex items-center justify-center text-brand-gold hover:bg-brand-gold/30 transition-all group-hover:bg-brand-gold group-hover:text-surface flex-shrink-0"
               aria-label={`Add ${product.name} to cart`}
             >
               <Plus size={18} />

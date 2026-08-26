@@ -80,7 +80,7 @@ export default function Home() {
       {/* ================================================
           MAIN PRODUCTS & SIGNATURE ITEMS
           ================================================ */}
-      <Section id="signature-items" className="py-20 px-4">
+      <Section id="signature-items" className="py-14 sm:py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <motion.div className="text-center mb-12" {...fadeUp()}>
             <span className="section-tag"><Crown size={12} /> Signature Collection</span>
@@ -112,7 +112,7 @@ export default function Home() {
       {/* ================================================
           OUR STORY TEASER (links to full page)
           ================================================ */}
-      <Section className="py-16 px-4" style={{ background: 'var(--green-dark)' }}>
+      <Section className="py-12 sm:py-16 px-4" style={{ background: 'var(--green-dark)' }}>
         <div className="max-w-5xl mx-auto">
           <motion.div
             {...fadeUp()}
@@ -140,7 +140,7 @@ export default function Home() {
       {/* ================================================
           CATEGORIES QUICK ACCESS (With Deals Banner)
           ================================================ */}
-      <Section className="py-16 px-4">
+      <Section className="py-12 sm:py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <motion.div className="text-center mb-10" {...fadeUp()}>
             <span className="section-tag">Explore</span>
@@ -186,7 +186,7 @@ export default function Home() {
       {/* ================================================
           CUSTOMER REVIEWS SECTION
           ================================================ */}
-      <Section className="py-20 px-4" style={{ background: 'var(--green-dark)' }}>
+      <Section className="py-14 sm:py-20 px-4" style={{ background: 'var(--green-dark)' }}>
         <div className="max-w-6xl mx-auto">
           <motion.div className="text-center mb-12" {...fadeUp()}>
             <span className="section-tag"><Star size={12} className="fill-brand-gold" /> Reviews</span>
@@ -239,7 +239,7 @@ export default function Home() {
       {/* ================================================
           CTA BANNER
           ================================================ */}
-      <Section className="py-20 px-4 text-center">
+      <Section className="py-14 sm:py-20 px-4 text-center">
         <div className="max-w-2xl mx-auto">
           <motion.div {...fadeUp()}>
             <Crown size={36} className="text-brand-gold mx-auto mb-4" />

@@ -88,10 +88,10 @@ export default function Navbar() {
               </span>
             )}
 
-            {/* Cart */}
+            {/* Cart — desktop */}
             <Link
               to="/cart"
-              className="relative flex items-center justify-center w-10 h-10 rounded-xl transition-all hover:bg-white/5"
+              className="hidden md:flex relative items-center justify-center w-10 h-10 rounded-xl transition-all hover:bg-white/5"
               aria-label="Shopping cart"
             >
               <ShoppingCart size={20} style={{ color: itemCount > 0 ? '#c9a84c' : 'rgba(232,240,236,0.7)' }} />
@@ -108,7 +108,7 @@ export default function Navbar() {
             </Link>
 
             {/* Order Now — desktop */}
-            <Link to="/menu" className="btn-gold hidden sm:flex text-xs py-2 px-4">
+            <Link to="/menu" className="btn-gold hidden md:flex text-xs py-2 px-4">
               Order Now
             </Link>
 

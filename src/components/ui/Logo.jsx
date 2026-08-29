@@ -12,64 +12,39 @@ const LOGO_SRC = '/Logo/gold_logo_transparent.png';
  * - Click/Tap: toggles name visibility on mobile / navigates to home
  */
 export function NavLogo() {
-  const [nameVisible, setNameVisible] = useState(false);
-
   return (
     <Link
       to="/"
-      className="inline-flex items-center gap-3 select-none py-1 group"
-      onMouseEnter={() => setNameVisible(true)}
-      onMouseLeave={() => setNameVisible(false)}
-      onClick={(e) => {
-        // If on touch device, toggle visibility
-        if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
-          if (!nameVisible) {
-            e.preventDefault();
-            setNameVisible(true);
-          }
-        }
-      }}
+      className="inline-flex items-center gap-2.5 sm:gap-3 select-none py-1 group"
     >
       {/* Shiny Golden Logo Emblem */}
       <motion.div
         className="relative flex items-center justify-center flex-shrink-0"
-        animate={{
-          scale: nameVisible ? 1.06 : 1,
-          filter: nameVisible
-            ? 'drop-shadow(0 0 16px rgba(201,168,76,1)) drop-shadow(0 0 32px rgba(201,168,76,0.7)) brightness(1.15)'
-            : 'drop-shadow(0 0 8px rgba(201,168,76,0.65)) brightness(1)',
-        }}
-        whileHover={{ scale: 1.06 }}
+        whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         transition={{ duration: 0.2 }}
       >
         <img
           src={LOGO_SRC}
           alt="STARVING Golden Logo"
-          className="w-11 h-11 sm:w-13 sm:h-13 object-contain"
+          className="w-10 h-10 sm:w-12 sm:h-12 object-contain group-hover:brightness-110 transition-all"
+          style={{
+            filter: 'drop-shadow(0 0 8px rgba(201,168,76,0.65))',
+          }}
           loading="eager"
         />
       </motion.div>
 
-      {/* STARVING Name - Smooth Animated Reveal */}
-      <AnimatePresence>
-        {nameVisible && (
-          <motion.span
-            key="brand-name"
-            initial={{ opacity: 0, x: -12, width: 0 }}
-            animate={{ opacity: 1, x: 0, width: 'auto' }}
-            exit={{ opacity: 0, x: -8, width: 0 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="font-brand text-2xl tracking-widest overflow-hidden whitespace-nowrap"
-            style={{
-              color: '#c9a84c',
-              textShadow: '0 0 22px rgba(201,168,76,0.9), 0 0 45px rgba(201,168,76,0.4)',
-            }}
-          >
-            STARVING
-          </motion.span>
-        )}
-      </AnimatePresence>
+      {/* STARVING Name - Permanent with logo */}
+      <span
+        className="font-brand text-xl sm:text-2xl tracking-widest whitespace-nowrap"
+        style={{
+          color: '#c9a84c',
+          textShadow: '0 0 20px rgba(201,168,76,0.5), 0 0 40px rgba(201,168,76,0.25)',
+        }}
+      >
+        STARVING
+      </span>
     </Link>
   );
 }

@@ -46,7 +46,6 @@ function CustomerLayout({ children }) {
   );
 }
 
-
 export default function App() {
   return (
     <BrowserRouter>
@@ -69,7 +68,7 @@ export default function App() {
                 }}
               />
               <Routes>
-                {/* ─── Customer Routes ─── */}
+                {/* ═══ Customer Routes ═══ */}
                 <Route path="/" element={<CustomerLayout><Home /></CustomerLayout>} />
                 <Route path="/menu" element={<CustomerLayout><MenuPage /></CustomerLayout>} />
                 <Route path="/cart" element={<CustomerLayout><CartPage /></CustomerLayout>} />
@@ -80,28 +79,62 @@ export default function App() {
                 <Route path="/our-story" element={<CustomerLayout><OurStory /></CustomerLayout>} />
                 <Route path="/reviews" element={<CustomerLayout><Reviews /></CustomerLayout>} />
 
-                {/* ─── Admin Routes ─── */}
+                {/* ═══ Admin & Staff Portal Routes ═══ */}
                 <Route path="/admin" element={<AdminLogin />} />
-                <Route path="/admin/dashboard" element={
-                  <ProtectedRoute><AdminDashboard /></ProtectedRoute>
-                } />
-                <Route path="/admin/orders" element={
-                  <ProtectedRoute><AdminOrders /></ProtectedRoute>
-                } />
-                <Route path="/admin/menu" element={
-                  <ProtectedRoute><AdminMenu /></ProtectedRoute>
-                } />
-                <Route path="/admin/reports" element={
-                  <ProtectedRoute><AdminReports /></ProtectedRoute>
-                } />
-                <Route path="/admin/settings" element={
-                  <ProtectedRoute><AdminSettings /></ProtectedRoute>
-                } />
-                <Route path="/admin/reviews" element={
-                  <ProtectedRoute><AdminReviews /></ProtectedRoute>
-                } />
+                
+                {/* Staff & Owner Accessible Routes */}
+                <Route
+                  path="/admin/dashboard"
+                  element={
+                    <ProtectedRoute allowedRoles={['staff', 'owner']}>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/orders"
+                  element={
+                    <ProtectedRoute allowedRoles={['staff', 'owner']}>
+                      <AdminOrders />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/reviews"
+                  element={
+                    <ProtectedRoute allowedRoles={['staff', 'owner']}>
+                      <AdminReviews />
+                    </ProtectedRoute>
+                  }
+                />
 
-                {/* ─── Fallback ─── */}
+                {/* Owner Only Routes */}
+                <Route
+                  path="/admin/menu"
+                  element={
+                    <ProtectedRoute allowedRoles={['owner']}>
+                      <AdminMenu />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/reports"
+                  element={
+                    <ProtectedRoute allowedRoles={['owner']}>
+                      <AdminReports />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/settings"
+                  element={
+                    <ProtectedRoute allowedRoles={['owner']}>
+                      <AdminSettings />
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* ═══ Fallback ═══ */}
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </CartProvider>

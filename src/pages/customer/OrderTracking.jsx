@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, Clock, ChefHat, Package, Bike, Star, RotateCcw, Phone } from 'lucide-react';
+import { CheckCircle, Clock, ChefHat, Package, Bike, Star, RotateCcw, Phone, ShoppingBag, ShieldCheck, UserCheck } from 'lucide-react';
 import { useOrders } from '../../context/OrderContext';
+import { useAuth } from '../../context/AuthContext';
 import { formatPrice, formatTime, timeAgo } from '../../utils/formatters';
 
 const STATUS_STEPS = [
   { key: 'received',   label: 'Order Received',   icon: CheckCircle, desc: 'We got your order!'              },
   { key: 'preparing',  label: 'Preparing',         icon: ChefHat,     desc: 'Our chefs are cooking for you'   },
-  { key: 'ready',      label: 'Ready',             icon: Package,     desc: 'Your order is packed & ready'    },
+  { key: 'ready',      label: 'Ready for Pickup',  icon: Package,     desc: 'Your order is packed & ready'    },
   { key: 'on_the_way', label: 'On the Way',        icon: Bike,        desc: 'Your order is heading to you'    },
   { key: 'delivered',  label: 'Delivered',         icon: Star,        desc: 'Enjoy your royal meal! 👑'       },
 ];
@@ -18,11 +19,21 @@ const STATUS_ORDER = ['received', 'preparing', 'ready', 'on_the_way', 'delivered
 export default function OrderTracking() {
   const { orderId } = useParams();
   const navigate = useNavigate();
-  const { getOrderById, orders } = useOrders();
+  const { getOrderById, orders, customerOrders } = useOrders();
+  const { customerId } = useAuth();
+  
   const [order, setOrder] = useState(null);
   const [inputId, setInputId] = useState(orderId || '');
   const [searchId, setSearchId] = useState(orderId || '');
   const [notFound, setNotFound] = useState(false);
+
+  // Auto-select latest customer order if no specific ID searched
+  useEffect(() => {
+    if (!searchId && customerOrders.length > 0) {
+      setSearchId(customerOrders[0].id);
+      setInputId(customerOrders[0].id);
+    }
+  }, [customerOrders, searchId]);
 
   useEffect(() => {
     if (!searchId) return;
@@ -44,43 +55,91 @@ export default function OrderTracking() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setSearchId(inputId.trim().toUpperCase());
+    if (inputId.trim()) {
+      setSearchId(inputId.trim().toUpperCase());
+    }
   };
 
   return (
-    <div className="min-h-screen pt-20 pb-10 px-4">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen pt-20 pb-12 px-4">
+      <div className="max-w-2xl mx-auto space-y-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center py-10"
+          className="text-center py-6"
         >
-          <span className="section-tag">Live Status</span>
-          <h1 className="section-title">Track Your Order</h1>
-          <p className="section-subtitle mx-auto text-center mt-2">Enter your order ID to see real-time status.</p>
+          <span className="section-tag">Real-Time Status</span>
+          <h1 className="section-title text-3xl sm:text-4xl">Track Your Order</h1>
+          <p className="section-subtitle mx-auto text-center mt-2 text-sm">
+            View live kitchen preparation and delivery progress for your orders.
+          </p>
         </motion.div>
+
+        {/* Customer Account Scope Indicator */}
+        <div className="bg-white/5 border border-white/10 rounded-2xl p-3.5 flex items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2 text-white/70">
+            <UserCheck size={16} className="text-brand-gold" />
+            <span>Customer Session: <strong className="text-brand-gold font-mono">{customerId}</strong></span>
+          </div>
+          <span className="text-[11px] text-white/40">
+            {customerOrders.length} Order{customerOrders.length !== 1 ? 's' : ''} in your history
+          </span>
+        </div>
 
         {/* Search */}
         <motion.form
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.1 }}
           onSubmit={handleSearch}
-          className="flex gap-3 mb-8"
+          className="flex gap-3"
         >
           <input
             type="text"
-            placeholder="e.g. ORD-AB12CD34"
+            placeholder="Enter Order ID (e.g. ORD-AB12CD34)"
             value={inputId}
-            onChange={e => setInputId(e.target.value.toUpperCase())}
-            className="input-field flex-1"
+            onChange={(e) => setInputId(e.target.value.toUpperCase())}
+            className="input-field flex-1 font-mono uppercase"
             id="order-id-input"
           />
-          <button type="submit" className="btn-gold px-5 py-3 text-sm">
+          <button type="submit" className="btn-gold px-6 py-3 text-sm">
             <RotateCcw size={15} /> Track
           </button>
         </motion.form>
+
+        {/* Customer's Own Recent Orders List */}
+        {customerOrders.length > 0 && (
+          <div className="glass-card p-4">
+            <h3 className="text-xs font-bold text-white/60 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+              <ShoppingBag size={14} className="text-brand-gold" /> Your Placed Orders ({customerOrders.length})
+            </h3>
+            <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+              {customerOrders.map((o) => (
+                <button
+                  key={o.id}
+                  onClick={() => {
+                    setInputId(o.id);
+                    setSearchId(o.id);
+                  }}
+                  className={`px-3 py-2 rounded-xl text-left border flex-shrink-0 transition-all ${
+                    searchId === o.id
+                      ? 'border-brand-gold bg-brand-gold/15 text-brand-gold'
+                      : 'border-white/10 bg-white/5 text-white/70 hover:border-white/20'
+                  }`}
+                >
+                  <p className="font-mono text-xs font-bold">{o.id}</p>
+                  <p className="text-[10px] text-white/40 mt-0.5 truncate max-w-[130px]">
+                    {(o.items || []).map((i) => i.name).join(', ')}
+                  </p>
+                  <p className="text-[10px] text-brand-gold font-semibold mt-1">
+                    {formatPrice(o.total)} • <span className="capitalize">{o.status}</span>
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Not found */}
         {notFound && (
@@ -89,12 +148,15 @@ export default function OrderTracking() {
             animate={{ opacity: 1 }}
             className="glass-card p-8 text-center"
           >
-            <p className="text-5xl mb-4">🔍</p>
-            <p className="text-white/60">Order not found. Please check your order ID and try again.</p>
+            <p className="text-4xl mb-3">🔍</p>
+            <p className="text-white/70 font-semibold text-sm">Order Not Found</p>
+            <p className="text-white/40 text-xs mt-1">
+              Please verify the Order ID or select one of your placed orders above.
+            </p>
           </motion.div>
         )}
 
-        {/* Order Details */}
+        {/* Order Details View */}
         {order && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -102,15 +164,19 @@ export default function OrderTracking() {
             className="space-y-5"
           >
             {/* Order Info Card */}
-            <div className="glass-card p-5">
-              <div className="flex justify-between items-start mb-4">
+            <div className="glass-card p-5 sm:p-6">
+              <div className="flex justify-between items-start mb-4 border-b border-white/10 pb-4">
                 <div>
-                  <p className="text-white/45 text-xs">Order ID</p>
-                  <p className="font-brand text-xl text-brand-gold">{order.id}</p>
+                  <p className="text-white/40 text-xs">Tracking Order</p>
+                  <p className="font-brand text-2xl text-brand-gold font-bold">{order.id}</p>
+                  <p className="text-white/60 text-xs mt-0.5">Placed for {order.customer?.name || 'Customer'}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-white/45 text-xs">Placed</p>
+                  <p className="text-white/40 text-xs">Placed</p>
                   <p className="text-white text-sm font-medium">{timeAgo(order.createdAt)}</p>
+                  <span className="inline-block mt-1 text-[11px] px-2.5 py-0.5 rounded-full bg-brand-gold/20 text-brand-gold font-bold uppercase">
+                    {order.status.replace(/_/g, ' ')}
+                  </span>
                 </div>
               </div>
 
@@ -118,51 +184,47 @@ export default function OrderTracking() {
               {order.status === 'cancelled' && (
                 <div className="bg-red-500/10 border border-red-500/25 rounded-xl p-4 mb-4">
                   <p className="text-red-400 font-semibold text-sm">❌ Order Cancelled</p>
-                  {order.statusHistory?.find(h => h.status === 'cancelled')?.note && (
+                  {order.statusHistory?.find((h) => h.status === 'cancelled')?.note && (
                     <p className="text-red-400/70 text-xs mt-1">
-                      Reason: {order.statusHistory.find(h => h.status === 'cancelled').note}
+                      Reason: {order.statusHistory.find((h) => h.status === 'cancelled').note}
                     </p>
                   )}
                 </div>
               )}
 
-              {/* Progress Steps */}
+              {/* Progress Steps Timeline */}
               {order.status !== 'cancelled' && (
-                <div className="mt-2">
+                <div className="mt-4 space-y-4">
                   {STATUS_STEPS.map((step, i) => {
-                    const isDone    = i < currentStepIndex;
+                    const isDone = i <= currentStepIndex;
                     const isCurrent = i === currentStepIndex;
                     const Icon = step.icon;
                     return (
                       <div key={step.key} className="flex items-start gap-4">
                         <div className="flex flex-col items-center">
-                          <motion.div
-                            initial={isCurrent ? { scale: 0.8 } : {}}
-                            animate={isCurrent ? { scale: [1, 1.1, 1] } : {}}
-                            transition={{ repeat: Infinity, duration: 2 }}
-                            className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
-                              isDone    ? 'bg-green-500/20 border-2 border-green-500' :
-                              isCurrent ? 'bg-brand-gold/20 border-2 border-brand-gold animate-pulse-gold' :
-                                          'bg-white/5 border-2 border-white/10'
-                            }`}
+                          <div
+                            className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-all ${
+                              isDone
+                                ? 'bg-brand-gold/20 border-2 border-brand-gold text-brand-gold'
+                                : 'bg-white/5 border-2 border-white/10 text-white/30'
+                            } ${isCurrent ? 'animate-pulse' : ''}`}
                           >
-                            <Icon
-                              size={16}
-                              className={isDone ? 'text-green-400' : isCurrent ? 'text-brand-gold' : 'text-white/20'}
-                            />
-                          </motion.div>
+                            <Icon size={18} />
+                          </div>
                           {i < STATUS_STEPS.length - 1 && (
-                            <div className={`w-0.5 h-8 my-1 transition-colors ${isDone ? 'bg-green-500/40' : 'bg-white/8'}`} />
+                            <div
+                              className={`w-0.5 h-8 my-1 ${
+                                i < currentStepIndex ? 'bg-brand-gold' : 'bg-white/10'
+                              }`}
+                            />
                           )}
                         </div>
-                        <div className="pb-6 pt-1.5">
-                          <p className={`text-sm font-semibold ${isDone ? 'text-green-400' : isCurrent ? 'text-brand-gold' : 'text-white/30'}`}>
+
+                        <div className="pt-1.5 flex-1 min-w-0">
+                          <p className={`text-sm font-semibold ${isDone ? 'text-white' : 'text-white/40'}`}>
                             {step.label}
-                            {isCurrent && <span className="ml-2 text-xs font-normal opacity-60">(Current)</span>}
                           </p>
-                          {(isDone || isCurrent) && (
-                            <p className="text-xs text-white/40 mt-0.5">{step.desc}</p>
-                          )}
+                          <p className="text-xs text-white/40 mt-0.5">{step.desc}</p>
                         </div>
                       </div>
                     );
@@ -171,54 +233,25 @@ export default function OrderTracking() {
               )}
             </div>
 
-            {/* Delivery Info */}
+            {/* Items Summary Card */}
             <div className="glass-card p-5">
-              <h3 className="font-semibold text-white text-sm mb-3">Delivery Details</h3>
-              <div className="space-y-2 text-sm text-white/55">
-                <p><span className="text-white/35">Name: </span>{order.customer?.name}</p>
-                <p><span className="text-white/35">Phone: </span>{order.customer?.phone}</p>
-                <p><span className="text-white/35">Address: </span>{order.customer?.address}</p>
-                {order.customer?.notes && (
-                  <p><span className="text-white/35">Notes: </span>{order.customer.notes}</p>
-                )}
-              </div>
-              <div className="gold-divider my-3" />
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-white/55">Total Paid</span>
-                <span className="price-current">{formatPrice(order.total)}</span>
-              </div>
-              <div className="flex justify-between items-center text-sm mt-1.5">
-                <span className="text-white/55">Estimated Time</span>
-                <span className="flex items-center gap-1 text-white">
-                  <Clock size={13} className="text-brand-gold" />
-                  {order.status === 'delivered' ? 'Delivered' : `~${order.estimatedTime} min`}
-                </span>
-              </div>
-            </div>
-
-            {/* Order Items */}
-            <div className="glass-card p-5">
-              <h3 className="font-semibold text-white text-sm mb-3">Items Ordered ({order.items?.length})</h3>
+              <h3 className="font-semibold text-white text-sm mb-3">Order Items</h3>
               <div className="space-y-2">
-                {order.items?.map((item, i) => (
-                  <div key={i} className="flex justify-between text-sm text-white/60">
-                    <span>{item.name} <span className="text-white/35">({item.size})</span> × {item.quantity}</span>
-                    <span>{formatPrice(item.price * item.quantity)}</span>
+                {(order.items || []).map((item, idx) => (
+                  <div key={idx} className="flex justify-between items-center text-xs py-1 border-b border-white/5">
+                    <span className="text-white/80">
+                      {item.quantity}x {item.name} {item.size && `(${item.size})`}
+                    </span>
+                    <span className="text-brand-gold font-semibold">
+                      {formatPrice((item.price || 0) * (item.quantity || 1))}
+                    </span>
                   </div>
                 ))}
+                <div className="flex justify-between items-center text-sm font-bold pt-2 text-white">
+                  <span>Total Amount</span>
+                  <span className="text-brand-gold">{formatPrice(order.total)}</span>
+                </div>
               </div>
-            </div>
-
-            <div className="flex gap-3">
-              <Link to="/menu" className="btn-outline-gold flex-1 justify-center text-sm">
-                Order Again
-              </Link>
-              <a
-                href={`tel:${order.customer?.phone}`}
-                className="btn-green flex items-center gap-2 flex-shrink-0 text-sm px-4"
-              >
-                <Phone size={14} /> Call
-              </a>
             </div>
           </motion.div>
         )}

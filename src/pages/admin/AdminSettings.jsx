@@ -49,11 +49,20 @@ export default function AdminSettings() {
 
   const handlePwdSave = (e) => {
     e.preventDefault();
-    if (pwdForm.current !== 'Starvingstaff') { toast.error('Current password is incorrect'); return; }
-    if (pwdForm.newPwd.length < 6) { toast.error('New password must be at least 6 characters'); return; }
-    if (pwdForm.newPwd !== pwdForm.confirm) { toast.error('Passwords do not match'); return; }
-    // In production: update via API. Here we just show success.
-    toast.success('Password updated! Please log in again.');
+    const validCurrentPasswords = ['Starvingowner', 'Starvingadmin', 'Starvingstaff'];
+    if (!validCurrentPasswords.includes(pwdForm.current)) {
+      toast.error('Current password is incorrect');
+      return;
+    }
+    if (pwdForm.newPwd.length < 6) {
+      toast.error('New password must be at least 6 characters');
+      return;
+    }
+    if (pwdForm.newPwd !== pwdForm.confirm) {
+      toast.error('Passwords do not match');
+      return;
+    }
+    toast.success('Password updated successfully! Please log in again.');
     setPwdForm({ current: '', newPwd: '', confirm: '' });
     setTimeout(() => logout(), 1500);
   };

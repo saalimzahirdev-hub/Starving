@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart, Menu, X, Phone } from 'lucide-react';
+import { ShoppingCart, Menu, X, Phone, MapPin } from 'lucide-react';
 import Logo, { NavLogo } from '../ui/Logo';
 import { useCart } from '../../context/CartContext';
 import { useApp } from '../../context/AppContext';
 
 const navLinks = [
-  { to: '/',                    label: 'Home'      },
-  { to: '/menu?category=Deals', label: '🔥 Deals',  isDeal: true },
-  { to: '/menu',                label: 'Menu'      },
-  { to: '/our-story',           label: 'Our Story' },
-  { to: '/reviews',             label: '⭐ Reviews' },
-  { to: '/contact',             label: 'Contact'   },
+  { to: '/',                    label: 'Home'        },
+  { to: '/menu?category=Deals', label: '🔥 Deals',    isDeal: true },
+  { to: '/menu',                label: 'Menu'        },
+  { to: '/track-order',         label: 'Track Order' },
+  { to: '/our-story',           label: 'Our Story'   },
+  { to: '/reviews',             label: '⭐ Reviews'   },
+  { to: '/contact',             label: 'Contact'     },
 ];
 
 export default function Navbar() {
@@ -53,12 +54,12 @@ export default function Navbar() {
         }}
       >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          {/* Logo — hover/tap to reveal STARVING name */}
+          {/* Logo */}
           <NavLogo />
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map(link => (
+          <div className="hidden md:flex items-center gap-7">
+            {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
@@ -113,7 +114,7 @@ export default function Navbar() {
 
             {/* Hamburger — mobile */}
             <button
-              onClick={() => setMobileOpen(o => !o)}
+              onClick={() => setMobileOpen((o) => !o)}
               className="md:hidden icon-btn"
               aria-label="Toggle menu"
             >
@@ -141,7 +142,7 @@ export default function Navbar() {
               </button>
             </div>
             <div className="flex flex-col gap-1 p-4 flex-1">
-              {navLinks.map(link => (
+              {navLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}

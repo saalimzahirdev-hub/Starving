@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Plus, Minus, ShoppingCart, Crown, ChevronRight } from 'lucide-react';
+import { X, Plus, Minus, ShoppingCart, Crown, ChevronRight, Star } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { formatPrice, calcDiscount } from '../../utils/formatters';
 
@@ -23,10 +23,18 @@ const desktopVariants = {
 
 export default function ProductModal({ product, onClose }) {
   const { addItem } = useCart();
-  const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
+
+  const fallbackVariant = {
+    size: 'Regular',
+    label: product?.name || 'Regular',
+    price: product?.price || 0,
+    originalPrice: product?.originalPrice || product?.price || 0,
+  };
+  const variants = product?.variants && product.variants.length > 0 ? product.variants : [fallbackVariant];
+  const [selectedVariant, setSelectedVariant] = useState(variants[0]);
   const [selectedAddons, setSelectedAddons] = useState([]);
   const [qty, setQty] = useState(1);
-  const [isMobile] = useState(() => window.innerWidth < 768);
+  const [isMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
 
   const toggleAddon = useCallback((addon) => {
     setSelectedAddons(prev =>
@@ -36,13 +44,14 @@ export default function ProductModal({ product, onClose }) {
     );
   }, []);
 
-  const addonTotal = selectedAddons.reduce((s, a) => s + a.price, 0);
-  const unitPrice = selectedVariant.price + addonTotal;
+  const currentVariant = selectedVariant || variants[0] || fallbackVariant;
+  const addonTotal = selectedAddons.reduce((s, a) => s + (a.price || 0), 0);
+  const unitPrice = (currentVariant.price || 0) + addonTotal;
   const totalPrice = unitPrice * qty;
-  const discount = calcDiscount(selectedVariant.price, selectedVariant.originalPrice);
+  const discount = calcDiscount(currentVariant.price, currentVariant.originalPrice);
 
   const handleAdd = () => {
-    addItem(product, selectedVariant, selectedAddons, qty);
+    addItem(product, currentVariant, selectedAddons, qty);
     onClose();
   };
 
@@ -87,12 +96,12 @@ export default function ProductModal({ product, onClose }) {
         </div>
 
         {/* Size / Variant Selector */}
-        {product.variants.length > 1 && (
+        {variants.length > 1 && (
           <div>
             <p className="input-label mb-3">Select Size</p>
             <div className="grid grid-cols-2 gap-2">
-              {product.variants.map(v => {
-                const isSelected = selectedVariant.size === v.size;
+              {variants.map(v => {
+                const isSelected = currentVariant.size === v.size;
                 const disc = calcDiscount(v.price, v.originalPrice);
                 return (
                   <button

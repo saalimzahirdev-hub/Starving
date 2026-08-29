@@ -1,36 +1,45 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  LayoutDashboard, ShoppingBag, UtensilsCrossed,
-  BarChart3, Settings, LogOut, X, Crown, MessageSquare
+  LayoutDashboard,
+  ShoppingBag,
+  UtensilsCrossed,
+  BarChart3,
+  Settings,
+  LogOut,
+  X,
+  Crown,
+  MessageSquare,
+  ChefHat,
+  ShieldCheck,
 } from 'lucide-react';
 import Logo from '../ui/Logo';
 import { useAuth } from '../../context/AuthContext';
 import { useOrders } from '../../context/OrderContext';
 import { reviewService } from '../../services/reviewService';
 
-const navItems = [
-  { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard, badge: null },
-  { to: '/admin/orders',    label: 'Orders',    icon: ShoppingBag,     badge: 'pending' },
-  { to: '/admin/menu',      label: 'Menu',      icon: UtensilsCrossed, badge: null },
-  { to: '/admin/reviews',   label: 'Reviews',   icon: MessageSquare,   badge: 'reviews' },
-  { to: '/admin/reports',   label: 'Reports',   icon: BarChart3,       badge: null },
-  { to: '/admin/settings',  label: 'Settings',  icon: Settings,        badge: null },
-];
-
-
 export default function AdminSidebar({ open, onClose }) {
-  const { logout } = useAuth();
+  const { user, isOwner, logout } = useAuth();
   const { orders } = useOrders();
   const navigate = useNavigate();
 
-  const pendingCount = orders.filter(o => o.status === 'received').length;
+  const pendingCount = orders.filter((o) => o.status === 'received').length;
   const pendingReviewsCount = reviewService.getPending().length;
 
   const handleLogout = () => {
     logout();
     navigate('/admin');
   };
+
+  // Nav items scoped by role permissions
+  const navItems = [
+    { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard, badge: null, roles: ['staff', 'owner'] },
+    { to: '/admin/orders',    label: 'Orders',    icon: ShoppingBag,     badge: 'pending', roles: ['staff', 'owner'] },
+    { to: '/admin/menu',      label: 'Menu Items',icon: UtensilsCrossed, badge: null, roles: ['owner'] },
+    { to: '/admin/reviews',   label: 'Reviews',   icon: MessageSquare,   badge: 'reviews', roles: ['staff', 'owner'] },
+    { to: '/admin/reports',   label: 'Reports',   icon: BarChart3,       badge: null, roles: ['owner'] },
+    { to: '/admin/settings',  label: 'Settings',  icon: Settings,        badge: null, roles: ['owner'] },
+  ].filter((item) => item.roles.includes(user?.role || 'staff'));
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
@@ -42,11 +51,18 @@ export default function AdminSidebar({ open, onClose }) {
         </button>
       </div>
 
-      {/* Admin badge */}
+      {/* User Role Card */}
       <div className="px-4 py-3">
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-brand-gold/10 border border-brand-gold/20">
-          <Crown size={13} className="text-brand-gold" />
-          <span className="text-brand-gold text-xs font-semibold tracking-wide">ADMIN PANEL</span>
+        <div className="p-3 rounded-xl bg-brand-gold/10 border border-brand-gold/25 space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-gold flex items-center gap-1">
+              {isOwner ? <Crown size={12} /> : <ChefHat size={12} />}
+              {isOwner ? 'OWNER / ADMIN' : 'STAFF PANEL'}
+            </span>
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+          </div>
+          <p className="text-white text-xs font-semibold truncate">{user?.name || 'Staff Member'}</p>
+          <p className="text-white/40 text-[10px] font-mono truncate">{user?.email || 'staff@starving.pk'}</p>
         </div>
       </div>
 
@@ -101,7 +117,6 @@ export default function AdminSidebar({ open, onClose }) {
       </div>
     </div>
   );
-
 
   return (
     <>

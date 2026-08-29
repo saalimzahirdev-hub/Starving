@@ -1,83 +1,74 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { orderService } from '../services/orderService';
+import { useAuth } from './AuthContext';
 import toast from 'react-hot-toast';
 import { Bell } from 'lucide-react';
 
 const OrderContext = createContext(null);
 
 const NOTIFICATIONS_STORAGE_KEY = 'starving_admin_notifications';
-const SOUND_STORAGE_KEY = 'starving_admin_sound';
+const SOUND_STORAGE_KEY = 'starving_sound_enabled';
 
-// Web Audio API chime for live order alerts (zero external audio dependencies, pleasant restaurant chime)
-let sharedAudioCtx = null;
-const getAudioContext = () => {
-  if (typeof window === 'undefined') return null;
-  if (!sharedAudioCtx) {
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (AudioContextClass) {
-      sharedAudioCtx = new AudioContextClass();
-    }
-  }
-  if (sharedAudioCtx && sharedAudioCtx.state === 'suspended') {
-    sharedAudioCtx.resume().catch(() => {});
-  }
-  return sharedAudioCtx;
-};
-
-const playOrderChime = () => {
+// Play sound chime with web audio fallback
+export const playOrderChime = () => {
   try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
+    const audio = new Audio('/sounds/order-bell.mp3');
+    audio.volume = 0.9;
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Fallback Web Audio API Synthesizer
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            const ctx = new AudioContext();
+            const now = ctx.currentTime;
+            
+            // Bell chime note 1
+            const osc1 = ctx.createOscillator();
+            const gain1 = ctx.createGain();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(880, now); // A5
+            gain1.gain.setValueAtTime(0.3, now);
+            gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+            osc1.connect(gain1);
+            gain1.connect(ctx.destination);
+            osc1.start(now);
+            osc1.stop(now + 0.8);
 
-    // Harmonic bell sequence: E5 (659.25Hz), G#5 (830.61Hz), B5 (987.77Hz), E6 (1318.51Hz)
-    const notes = [659.25, 830.61, 987.77, 1318.51];
-    const startTime = ctx.currentTime;
-
-    notes.forEach((freq, index) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(freq, startTime + index * 0.1);
-
-      gain.gain.setValueAtTime(0, startTime + index * 0.1);
-      gain.gain.linearRampToValueAtTime(0.28, startTime + index * 0.1 + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + index * 0.1 + 0.55);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(startTime + index * 0.1);
-      osc.stop(startTime + index * 0.1 + 0.6);
-    });
-  } catch {
-    // Audio context may be restricted before user gesture
-  }
+            // Bell chime note 2
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(1320, now + 0.15); // E6
+            gain2.gain.setValueAtTime(0.35, now + 0.15);
+            gain2.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+            osc2.connect(gain2);
+            gain2.connect(ctx.destination);
+            osc2.start(now + 0.15);
+            osc2.stop(now + 1.0);
+          }
+        } catch (e) {}
+      });
+    }
+  } catch (err) {}
 };
 
 export function OrderProvider({ children }) {
+  const { customerId, isAuthenticated, isStaff } = useAuth();
+  
+  // All restaurant orders (used by staff/owner dashboard)
   const [orders, setOrders] = useState(() => orderService.getAll());
+  
+  // Scoped orders for active customer
+  const [customerOrders, setCustomerOrders] = useState(() => 
+    orderService.getCustomerOrders(customerId)
+  );
+
   const [activeOrderId, setActiveOrderId] = useState(null);
   const [newOrderAlert, setNewOrderAlert] = useState(null);
 
-  // Sound preference state
-  const [soundEnabled, setSoundEnabled] = useState(() => {
-    try {
-      return localStorage.getItem(SOUND_STORAGE_KEY) !== 'false';
-    } catch {
-      return true;
-    }
-  });
-
-  // Browser notification permission state
-  const [browserPermission, setBrowserPermission] = useState(() => {
-    if (typeof window !== 'undefined' && 'Notification' in window) {
-      return Notification.permission;
-    }
-    return 'unsupported';
-  });
-
-  // Notifications list state
+  // Load notifications from sessionStorage
   const [notifications, setNotifications] = useState(() => {
     try {
       const saved = sessionStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
@@ -87,7 +78,22 @@ export function OrderProvider({ children }) {
     }
   });
 
-  // Keep track of order IDs already processed in this active session to prevent duplicates
+  const [soundEnabled, setSoundEnabled] = useState(() => {
+    try {
+      const saved = localStorage.getItem(SOUND_STORAGE_KEY);
+      return saved !== null ? JSON.parse(saved) : true;
+    } catch {
+      return true;
+    }
+  });
+
+  const [browserPermission, setBrowserPermission] = useState(() => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      return Notification.permission;
+    }
+    return 'default';
+  });
+
   const handledOrderIdsRef = useRef(new Set());
   const isInitializedRef = useRef(false);
 
@@ -95,206 +101,185 @@ export function OrderProvider({ children }) {
   useEffect(() => {
     try {
       sessionStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(notifications));
-    } catch {
-      // Storage limits or quota fallback
-    }
+    } catch {}
   }, [notifications]);
 
-  // Unlock Web Audio on first user interaction anywhere in the document
+  // Keep customer orders synchronized with active customerId
   useEffect(() => {
-    const unlockAudio = () => {
-      getAudioContext();
-      document.removeEventListener('pointerdown', unlockAudio);
-      document.removeEventListener('keydown', unlockAudio);
-    };
-    document.addEventListener('pointerdown', unlockAudio, { once: true });
-    document.addEventListener('keydown', unlockAudio, { once: true });
-    return () => {
-      document.removeEventListener('pointerdown', unlockAudio);
-      document.removeEventListener('keydown', unlockAudio);
-    };
-  }, []);
+    if (customerId) {
+      setCustomerOrders(orderService.getCustomerOrders(customerId));
+    }
+  }, [customerId, orders]);
 
   // Request browser notification permission
   const requestBrowserNotificationPermission = useCallback(async () => {
-    if (typeof window !== 'undefined' && 'Notification' in window) {
-      try {
-        const res = await Notification.requestPermission();
-        setBrowserPermission(res);
-        if (res === 'granted') {
-          toast.success('Desktop notifications enabled!', {
-            style: { background: '#16211a', color: '#e8f0ec', border: '1px solid #00a693' }
-          });
-        }
-        return res;
-      } catch {
-        return 'denied';
-      }
+    if (typeof window === 'undefined' || !('Notification' in window)) return 'unsupported';
+    try {
+      const perm = await Notification.requestPermission();
+      setBrowserPermission(perm);
+      return perm;
+    } catch {
+      return 'denied';
     }
-    return 'unsupported';
   }, []);
 
-  // Toggle sound alert
   const toggleSound = useCallback(() => {
-    setSoundEnabled(prev => {
+    setSoundEnabled((prev) => {
       const next = !prev;
-      try {
-        localStorage.setItem(SOUND_STORAGE_KEY, String(next));
-      } catch {}
-      if (next) {
-        playOrderChime();
-        toast('🔔 Notification sound turned ON', {
-          style: { background: '#16211a', color: '#e8f0ec', border: '1px solid #00a693' }
-        });
-      } else {
-        toast('🔕 Notification sound MUTED', {
-          style: { background: '#16211a', color: '#e8f0ec', border: '1px solid rgba(255,255,255,0.2)' }
-        });
-      }
+      localStorage.setItem(SOUND_STORAGE_KEY, JSON.stringify(next));
+      if (next) playOrderChime();
       return next;
     });
   }, []);
 
-  // Mark specific notification as read
   const markNotificationAsRead = useCallback((id) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
   }, []);
 
-  // Mark all notifications as read
   const markAllNotificationsAsRead = useCallback(() => {
-    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   }, []);
 
-  // Clear all notifications
   const clearNotifications = useCallback(() => {
     setNotifications([]);
+    try {
+      sessionStorage.removeItem(NOTIFICATIONS_STORAGE_KEY);
+    } catch {}
   }, []);
 
-  // Unread count
-  const unreadCount = notifications.filter(n => !n.isRead).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   // Process incoming new order event
-  const processIncomingOrder = useCallback((order) => {
-    if (!order || !order.id) return;
+  const processIncomingOrder = useCallback(
+    (order) => {
+      if (!order?.id) return;
+      if (handledOrderIdsRef.current.has(order.id)) return;
+      handledOrderIdsRef.current.add(order.id);
 
-    // Refresh orders list
-    setOrders(orderService.getAll());
+      // Update central orders state
+      setOrders(orderService.getAll());
 
-    // If order was already handled during this session, skip alert triggers
-    if (handledOrderIdsRef.current.has(order.id)) {
-      return;
-    }
-    handledOrderIdsRef.current.add(order.id);
-
-    // Create notification item
-    const notifItem = {
-      id: `notif-${order.id}`,
-      orderId: order.id,
-      order,
-      isRead: false,
-      createdAt: order.createdAt || new Date().toISOString(),
-    };
-
-    setNotifications(prev => [notifItem, ...prev.filter(n => n.orderId !== order.id)]);
-    setNewOrderAlert(order);
-
-    // Play chime if sound enabled
-    if (soundEnabled) {
-      playOrderChime();
-    }
-
-    // Trigger Browser Notification if permission granted
-    if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
-      try {
-        const itemsText = (order.items || [])
-          .map(i => `${i.quantity}× ${i.name}`)
-          .slice(0, 3)
-          .join(', ');
-        const n = new Notification('🔔 New Order Received!', {
-          body: `Order #${order.id}\n${order.customer?.name || 'Customer'}: ${itemsText}\nTotal: PKR ${order.total}`,
-          icon: '/favicon.ico',
-          tag: order.id,
-        });
-        n.onclick = () => {
-          window.focus();
-          setActiveOrderId(order.id);
-          if (!window.location.pathname.startsWith('/admin')) {
-            window.location.href = '/admin/orders';
-          }
-        };
-      } catch {
-        // Notification failed or blocked
+      // If matches active customer, update customerOrders
+      if (customerId && order.customerId === customerId) {
+        setCustomerOrders(orderService.getCustomerOrders(customerId));
       }
-    }
 
-    // Show rich in-dashboard toast
-    const isAdmin = typeof window !== 'undefined' && window.location.pathname.startsWith('/admin');
-    if (isAdmin) {
-      toast.custom(
-        (t) => (
-          <div
-            className={`${
-              t.visible ? 'animate-enter' : 'animate-leave'
-            } max-w-md w-full bg-[#111815] border border-brand-gold/50 shadow-[0_12px_40px_rgba(0,0,0,0.8)] rounded-2xl pointer-events-auto p-4 flex items-start gap-3.5`}
-            style={{ backdropFilter: 'blur(20px)' }}
-          >
-            <div className="w-10 h-10 rounded-xl bg-brand-gold/20 border border-brand-gold/40 flex items-center justify-center text-brand-gold flex-shrink-0">
-              <Bell size={20} className="animate-bounce" />
-            </div>
+      // Add to notifications list
+      const notif = {
+        id: 'notif_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        orderId: order.id,
+        customerName: order.customer?.name || 'Customer',
+        total: order.total,
+        itemCount: (order.items || []).reduce((acc, i) => acc + (i.quantity || 1), 0),
+        itemsSummary: (order.items || []).map((i) => `${i.quantity || 1}x ${i.name}`).slice(0, 2).join(', '),
+        createdAt: order.createdAt || new Date().toISOString(),
+        read: false,
+      };
 
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2 mb-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-brand-gold flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#00a693] animate-ping" />
-                  New Order Received
-                </span>
-                <span className="text-[10px] text-white/40">Just now</span>
+      setNotifications((prev) => [notif, ...prev.slice(0, 49)]);
+      setNewOrderAlert(order);
+
+      // Play bell chime if sound enabled and user is staff/owner or on admin route
+      const isAdminRoute = typeof window !== 'undefined' && window.location.pathname.startsWith('/admin');
+      if (soundEnabled) {
+        playOrderChime();
+      }
+
+      // Trigger Browser Notification if permission granted
+      if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+        try {
+          const itemsText = (order.items || [])
+            .map((i) => `${i.quantity}x ${i.name}`)
+            .slice(0, 3)
+            .join(', ');
+          const n = new Notification('🔔 New Restaurant Order Received!', {
+            body: `Order #${order.id}\n${order.customer?.name || 'Customer'}: ${itemsText}\nTotal: PKR ${order.total}`,
+            icon: '/favicon.ico',
+            tag: order.id,
+          });
+          n.onclick = () => {
+            window.focus();
+            setActiveOrderId(order.id);
+            if (!window.location.pathname.startsWith('/admin')) {
+              window.location.href = '/admin/orders';
+            }
+          };
+        } catch {}
+      }
+
+      // Show toast on admin views
+      if (isAdminRoute) {
+        toast.custom(
+          (t) => (
+            <div
+              className={`${
+                t.visible ? 'animate-enter' : 'animate-leave'
+              } max-w-md w-full bg-[#111815] border border-brand-gold/50 shadow-[0_12px_40px_rgba(0,0,0,0.8)] rounded-2xl pointer-events-auto p-4 flex items-start gap-3.5`}
+              style={{ backdropFilter: 'blur(20px)' }}
+            >
+              <div className="w-10 h-10 rounded-xl bg-brand-gold/20 border border-brand-gold/40 flex items-center justify-center text-brand-gold flex-shrink-0">
+                <Bell size={20} className="animate-bounce" />
               </div>
 
-              <p className="font-brand text-sm sm:text-base text-white font-bold truncate">
-                {order.id} • {order.customer?.name || 'Customer'}
-              </p>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-brand-gold flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#00a693] animate-ping" />
+                    New Order Received
+                  </span>
+                  <span className="text-[10px] text-white/40">Just now</span>
+                </div>
 
-              <p className="text-xs text-white/70 truncate mt-0.5">
-                {(order.items || []).map(i => `${i.quantity}× ${i.name}`).join(', ') || 'Item details'}
-              </p>
+                <p className="font-brand text-sm sm:text-base text-white font-bold truncate">
+                  {order.id} • {order.customer?.name || 'Customer'}
+                </p>
 
-              <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-white/10">
-                <span className="text-xs text-white/70">
-                  Total: <strong className="text-brand-gold font-bold">PKR {order.total}</strong>
-                </span>
+                <p className="text-xs text-white/70 truncate mt-0.5">
+                  {(order.items || []).map((i) => `${i.quantity}x ${i.name}`).join(', ') || 'Item details'}
+                </p>
 
-                <button
-                  onClick={() => {
-                    toast.dismiss(t.id);
-                    setActiveOrderId(order.id);
-                    if (window.location.pathname !== '/admin/orders') {
-                      window.location.href = '/admin/orders';
-                    }
-                  }}
-                  className="text-xs font-bold text-[#00a693] hover:text-[#1ab69d] flex items-center gap-1 transition-colors"
-                >
-                  View Order →
-                </button>
+                <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-white/10">
+                  <span className="text-xs text-white/70">
+                    Total: <strong className="text-brand-gold font-bold">PKR {order.total}</strong>
+                  </span>
+
+                  <button
+                    onClick={() => {
+                      toast.dismiss(t.id);
+                      setActiveOrderId(order.id);
+                      if (window.location.pathname !== '/admin/orders') {
+                        window.location.href = '/admin/orders';
+                      }
+                    }}
+                    className="text-xs font-bold text-[#00a693] hover:text-[#1ab69d] flex items-center gap-1 transition-colors"
+                  >
+                    View Order →
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ),
-        { duration: 7000, position: 'top-right' }
-      );
-    }
-  }, [soundEnabled]);
+          ),
+          { duration: 7000, position: 'top-right' }
+        );
+      }
+    },
+    [soundEnabled, customerId]
+  );
 
   // Set up listeners for real-time order detection
   useEffect(() => {
-    // 1. Initial load: Mark all pre-existing orders as already handled so they DO NOT fire alerts
     const initialOrders = orderService.getAll();
-    initialOrders.forEach(o => {
+    initialOrders.forEach((o) => {
       if (o?.id) handledOrderIdsRef.current.add(o.id);
     });
     isInitializedRef.current = true;
 
-    const refresh = () => setOrders(orderService.getAll());
+    const refresh = () => {
+      setOrders(orderService.getAll());
+      if (customerId) {
+        setCustomerOrders(orderService.getCustomerOrders(customerId));
+      }
+    };
 
     const handleNewOrderEvent = (e) => {
       const order = e?.detail;
@@ -310,8 +295,7 @@ export function OrderProvider({ children }) {
     const handleStorageChange = (e) => {
       if (e.key === 'starving_orders') {
         const currentList = orderService.getAll();
-        // Detect if any new order appeared in storage
-        currentList.forEach(order => {
+        currentList.forEach((order) => {
           if (order?.id && !handledOrderIdsRef.current.has(order.id)) {
             processIncomingOrder(order);
           }
@@ -340,14 +324,12 @@ export function OrderProvider({ children }) {
           }
         };
       }
-    } catch {
-      // BroadcastChannel unavailable
-    }
+    } catch {}
 
-    // Safety periodic check every 5 seconds for any new order missed during background suspension
+    // Periodic safety sync every 5 seconds
     const interval = setInterval(() => {
       const all = orderService.getAll();
-      all.forEach(order => {
+      all.forEach((order) => {
         if (order?.id && !handledOrderIdsRef.current.has(order.id) && isInitializedRef.current) {
           processIncomingOrder(order);
         }
@@ -363,26 +345,40 @@ export function OrderProvider({ children }) {
       if (channel) channel.close();
       clearInterval(interval);
     };
-  }, [processIncomingOrder]);
+  }, [processIncomingOrder, customerId]);
 
-  const placeOrder = useCallback((orderData) => {
-    const order = orderService.create(orderData);
-    setOrders(orderService.getAll());
-    setActiveOrderId(order.id);
-    return order;
-  }, []);
+  const placeOrder = useCallback(
+    (orderData) => {
+      const orderPayload = {
+        ...orderData,
+        customerId: orderData.customerId || customerId || 'CUST-GUEST',
+      };
+      const order = orderService.create(orderPayload);
+      setOrders(orderService.getAll());
+      setCustomerOrders(orderService.getCustomerOrders(orderPayload.customerId));
+      setActiveOrderId(order.id);
+      return order;
+    },
+    [customerId]
+  );
 
   const updateOrderStatus = useCallback((id, status, note = '') => {
     const updated = orderService.updateStatus(id, status, note);
     setOrders(orderService.getAll());
+    if (customerId) {
+      setCustomerOrders(orderService.getCustomerOrders(customerId));
+    }
     return updated;
-  }, []);
+  }, [customerId]);
 
   const cancelOrder = useCallback((id, reason = '') => {
     const updated = orderService.cancel(id, reason);
     setOrders(orderService.getAll());
+    if (customerId) {
+      setCustomerOrders(orderService.getCustomerOrders(customerId));
+    }
     return updated;
-  }, []);
+  }, [customerId]);
 
   const updatePaymentStatus = useCallback((id, paymentStatus) => {
     const updated = orderService.updatePaymentStatus(id, paymentStatus);
@@ -390,35 +386,41 @@ export function OrderProvider({ children }) {
     return updated;
   }, []);
 
-  const getOrderById = useCallback((id) => {
-    return orders.find(o => o.id === id) || orderService.getById(id);
-  }, [orders]);
+  const getOrderById = useCallback(
+    (id) => {
+      return orders.find((o) => o.id === id) || orderService.getById(id);
+    },
+    [orders]
+  );
 
   const activeOrder = activeOrderId ? getOrderById(activeOrderId) : null;
 
   return (
-    <OrderContext.Provider value={{
-      orders,
-      activeOrder,
-      activeOrderId,
-      newOrderAlert,
-      notifications,
-      unreadCount,
-      soundEnabled,
-      browserPermission,
-      setActiveOrderId,
-      placeOrder,
-      updateOrderStatus,
-      updatePaymentStatus,
-      cancelOrder,
-      getOrderById,
-      playOrderChime,
-      toggleSound,
-      markNotificationAsRead,
-      markAllNotificationsAsRead,
-      clearNotifications,
-      requestBrowserNotificationPermission,
-    }}>
+    <OrderContext.Provider
+      value={{
+        orders,
+        customerOrders,
+        activeOrder,
+        activeOrderId,
+        newOrderAlert,
+        notifications,
+        unreadCount,
+        soundEnabled,
+        browserPermission,
+        setActiveOrderId,
+        placeOrder,
+        updateOrderStatus,
+        updatePaymentStatus,
+        cancelOrder,
+        getOrderById,
+        playOrderChime,
+        toggleSound,
+        markNotificationAsRead,
+        markAllNotificationsAsRead,
+        clearNotifications,
+        requestBrowserNotificationPermission,
+      }}
+    >
       {children}
     </OrderContext.Provider>
   );

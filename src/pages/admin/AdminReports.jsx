@@ -11,7 +11,7 @@ import {
   LineChart, Line, PieChart, Pie, Cell, Legend,
 } from 'recharts';
 
-const COLORS = ['#c9a84c','#27904e','#60a5fa','#f97316','#a78bfa','#f87171','#4ade80'];
+const COLORS = ['#c9a84c','#00A693','#60a5fa','#f97316','#a78bfa','#f87171','#4ade80'];
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload?.length) {

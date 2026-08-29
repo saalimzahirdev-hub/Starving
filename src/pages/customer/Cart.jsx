@@ -100,11 +100,11 @@ export default function CartPage() {
                   className="glass-card p-4 flex gap-4"
                 >
                   {/* Image */}
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex-shrink-0 bg-surface-card">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex-shrink-0 bg-surface-card flex items-center justify-center aspect-square">
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover object-center"
                       loading="lazy"
                       onError={e => e.target.style.display = 'none'}
                     />

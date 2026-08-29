@@ -24,7 +24,7 @@ export default function Footer() {
     <footer className="relative border-t overflow-hidden" style={{ borderColor: 'rgba(201,168,76,0.12)', background: 'var(--green-950)' }}>
       {/* Subtle bg pattern */}
       <div className="absolute inset-0 opacity-5 pointer-events-none"
-        style={{ backgroundImage: 'radial-gradient(circle at 30% 50%, #c9a84c 0%, transparent 50%), radial-gradient(circle at 80% 20%, #0d3520 0%, transparent 60%)' }}
+        style={{ backgroundImage: 'radial-gradient(circle at 30% 50%, #c9a84c 0%, transparent 50%), radial-gradient(circle at 80% 20%, #00A693 0%, transparent 60%)' }}
       />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-8">

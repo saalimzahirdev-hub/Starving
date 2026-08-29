@@ -135,8 +135,8 @@ export default function AdminMenu() {
                       >
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg overflow-hidden bg-surface-card flex-shrink-0">
-                              <img src={item.image} alt={item.name} className="w-full h-full object-cover"
+                            <div className="w-11 h-11 rounded-lg overflow-hidden bg-surface-card flex-shrink-0 flex items-center justify-center aspect-square">
+                              <img src={item.image} alt={item.name} className="w-full h-full object-cover object-center"
                                 onError={e => e.target.style.display='none'} />
                             </div>
                             <div>

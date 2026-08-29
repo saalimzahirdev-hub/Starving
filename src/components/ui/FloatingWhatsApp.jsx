@@ -20,7 +20,7 @@ export default function FloatingWhatsApp() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.85, y: 8 }}
             transition={{ duration: 0.2 }}
-            className="bg-[#1a2c20] border border-green-500/30 rounded-2xl p-3 shadow-xl max-w-[220px]"
+            className="bg-[#003b34] border border-green-500/30 rounded-2xl p-3 shadow-xl max-w-[220px]"
           >
             <button
               onClick={() => setShow(false)}

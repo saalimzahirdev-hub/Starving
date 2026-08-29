@@ -169,7 +169,7 @@ export default function Home() {
                   to={label === 'Deals' ? '/menu?category=Deals' : `/menu?category=${label}`}
                   className={`glass-card p-5 flex flex-col items-center gap-2 transition-all group text-center ${
                     highlight
-                      ? 'border-brand-gold/50 bg-gradient-to-b from-brand-gold/15 to-[#0e271a] shadow-[0_0_20px_rgba(201,168,76,0.2)]'
+                      ? 'border-brand-gold/50 bg-gradient-to-b from-brand-gold/15 to-[#003b34] shadow-[0_0_20px_rgba(201,168,76,0.2)]'
                       : 'hover:border-brand-gold/40'
                   }`}
                 >

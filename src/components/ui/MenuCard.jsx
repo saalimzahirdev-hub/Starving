@@ -45,12 +45,12 @@ export default function MenuCard({ product, index = 0 }) {
         onKeyDown={e => e.key === 'Enter' && setShowModal(true)}
       >
         {/* Image */}
-        <div className="relative h-36 sm:h-44 overflow-hidden bg-surface-card">
+        <div className="relative w-full aspect-square overflow-hidden bg-surface-card flex items-center justify-center">
           {!imgErr ? (
             <img
               src={product.image}
               alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
               onError={() => setImgErr(true)}
             />
@@ -66,28 +66,28 @@ export default function MenuCard({ product, index = 0 }) {
             </div>
           )}
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#111815]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+          <div className="absolute inset-0 bg-gradient-to-t from-[#111815]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+        </div>
+
+        {/* Content */}
+        <div className="p-4 flex flex-col flex-1">
+          {/* Tags / Badges Row */}
+          <div className="flex items-center gap-1.5 flex-wrap mb-2">
+            <span className="text-[10px] font-semibold bg-white/5 text-white/70 px-2 py-0.5 rounded-full border border-white/10">
+              {product.category}
+            </span>
             {discount > 0 && (
-              <span className="bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+              <span className="bg-green-500/20 border border-green-500/40 text-green-400 text-[10px] font-bold px-2 py-0.5 rounded-full">
                 {discount}% OFF
               </span>
             )}
             {product.isPopular && (
-              <span className="flex items-center gap-1 bg-brand-gold text-surface text-[10px] font-bold px-2 py-0.5 rounded-full">
-                <Star size={8} fill="currentColor" /> Popular
+              <span className="flex items-center gap-1 bg-brand-gold/15 border border-brand-gold/30 text-brand-gold text-[10px] font-bold px-2 py-0.5 rounded-full">
+                <Star size={9} fill="currentColor" /> Popular
               </span>
             )}
           </div>
-          {/* Category */}
-          <span className="absolute top-3 right-3 text-[10px] font-semibold bg-black/50 text-white/70 px-2 py-0.5 rounded-full backdrop-blur-sm">
-            {product.category}
-          </span>
-        </div>
 
-        {/* Content */}
-        <div className="p-4">
           <h3 className="font-semibold text-white group-hover:text-brand-gold transition-colors duration-200 text-sm sm:text-base leading-snug">
             {product.name}
           </h3>

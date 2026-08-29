@@ -50,7 +50,7 @@ export function CartProvider({ children }) {
     });
     toast.success(`${product.name} (${variant.size}) added to cart!`, {
       style: { background: '#16211a', color: '#e8f0ec', border: '1px solid rgba(201,168,76,0.3)' },
-      iconTheme: { primary: '#c9a84c', secondary: '#0d3520' },
+      iconTheme: { primary: '#c9a84c', secondary: '#00A693' },
     });
   }, []);
 

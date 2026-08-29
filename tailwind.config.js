@@ -7,22 +7,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Brand greens
+        // Brand greens (Persian Green #00A693)
         'brand-green': {
-          50:  '#e8f5ee',
-          100: '#c5e4d0',
-          200: '#9fd1af',
-          300: '#75be8d',
-          400: '#52af72',
-          500: '#2e9f57',
-          600: '#27904e',
-          700: '#1e7d43',
-          800: '#166b38',
-          900: '#0d4a27',
-          950: '#0a2e1a',
-          DEFAULT: '#0d3520',
-          dark: '#0a2318',
-          darker: '#061610',
+          50:  '#e6faf7',
+          100: '#bff0e8',
+          200: '#7fe0d0',
+          300: '#43cbb4',
+          400: '#1ab69d',
+          500: '#00a693',
+          600: '#009584',
+          700: '#008b7a',
+          800: '#007063',
+          900: '#00594e',
+          950: '#003b34',
+          DEFAULT: '#00a693',
+          dark: '#008b7a',
+          darker: '#004d44',
         },
         // Royal golds
         'brand-gold': {
@@ -31,13 +31,13 @@ export default {
           dark: '#a8882e',
           900: '#7a6020',
         },
-        // Surface colors
+        // Surface colors (Charcoal - 100% UNCHANGED)
         'surface': {
           DEFAULT: '#111815',
           card: '#16211a',
           hover: '#1c2b22',
           border: 'rgba(201,168,76,0.15)',
-          glass: 'rgba(13,53,32,0.6)',
+          glass: 'rgba(0, 166, 147, 0.25)',
         }
       },
       fontFamily: {
@@ -46,9 +46,9 @@ export default {
       },
       backgroundImage: {
         'gold-gradient': 'linear-gradient(135deg, #c9a84c 0%, #e8c97a 50%, #c9a84c 100%)',
-        'green-gradient': 'linear-gradient(135deg, #0d3520 0%, #1a5c35 100%)',
-        'card-gradient': 'linear-gradient(145deg, rgba(26,44,34,0.8) 0%, rgba(13,35,24,0.9) 100%)',
-        'hero-gradient': 'linear-gradient(to bottom, rgba(6,22,16,0.3) 0%, rgba(6,22,16,0.7) 60%, rgba(6,22,16,1) 100%)',
+        'green-gradient': 'linear-gradient(135deg, #00a693 0%, #008b7a 100%)',
+        'card-gradient': 'linear-gradient(145deg, rgba(0,59,52,0.85) 0%, rgba(0,36,32,0.92) 100%)',
+        'hero-gradient': 'linear-gradient(to bottom, rgba(0,36,32,0.3) 0%, rgba(0,36,32,0.7) 60%, rgba(18,22,23,1) 100%)',
       },
       boxShadow: {
         'gold': '0 0 20px rgba(201,168,76,0.2)',

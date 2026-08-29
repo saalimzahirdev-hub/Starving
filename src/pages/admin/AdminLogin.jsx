@@ -26,7 +26,7 @@ export default function AdminLogin() {
     <div
       className="min-h-screen flex items-center justify-center px-4"
       style={{
-        background: `radial-gradient(ellipse at 30% 60%, rgba(13,53,32,0.8) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(201,168,76,0.06) 0%, transparent 50%), var(--green-950)`,
+        background: `radial-gradient(ellipse at 30% 60%, rgba(0,166,147,0.3) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(201,168,76,0.06) 0%, transparent 50%), var(--green-950)`,
       }}
     >
       <motion.div
@@ -39,7 +39,7 @@ export default function AdminLogin() {
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
             <img
-              src="/Logo/WhatsApp Image 2026-08-23 at 6.04.34 PM.jpeg"
+              src="/Logo/gold_logo_transparent.png"
               alt="STARVING"
               className="w-20 object-contain rounded-xl drop-shadow-[0_0_20px_rgba(201,168,76,0.6)]"
               onError={(e) => { e.target.style.display = 'none'; }}

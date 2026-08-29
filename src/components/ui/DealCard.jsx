@@ -35,51 +35,30 @@ export default function DealCard({ deal, index = 0 }) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.15 }}
         transition={{ delay: index * 0.08, duration: 0.5, ease: 'easeOut' }}
-        className="glass-card group relative flex flex-col overflow-hidden rounded-2xl border border-brand-gold/25 hover:border-brand-gold/60 transition-all duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.4)] hover:shadow-[0_8px_32px_rgba(201,168,76,0.2)] bg-gradient-to-b from-[#12281e]/90 to-[#0a1b14]/95"
+        className="glass-card group relative flex flex-col overflow-hidden rounded-2xl border border-brand-gold/25 hover:border-brand-gold/60 transition-all duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.4)] hover:shadow-[0_8px_32px_rgba(201,168,76,0.2)] bg-gradient-to-b from-[#003b34]/90 to-[#002420]/95"
       >
         {/* Deal Image Container */}
         <div
-          className="relative h-60 sm:h-64 overflow-hidden bg-black/40 cursor-pointer"
+          className="relative w-full aspect-square overflow-hidden bg-black/40 cursor-pointer flex items-center justify-center"
           onClick={() => setShowModal(true)}
         >
           {!imgErr ? (
             <img
               src={deal.image}
               alt={deal.name}
-              className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+              className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
               loading="lazy"
               onError={() => setImgErr(true)}
             />
           ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-green-950 to-[#091f15] text-brand-gold p-4 text-center">
+            <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-green-950 to-[#002420] text-brand-gold p-4 text-center">
               <Flame size={36} className="mb-2 text-brand-gold animate-bounce" />
               <p className="font-brand text-lg">{deal.name}</p>
             </div>
           )}
 
           {/* Luxury Vignette & Shimmer Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a1b14] via-transparent to-black/30 pointer-events-none" />
-
-          {/* Top Badges */}
-          <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
-            <span className="flex items-center gap-1 bg-brand-gold text-surface text-[11px] font-bold tracking-wide uppercase px-2.5 py-1 rounded-full shadow-lg">
-              <Flame size={12} className="fill-surface" />
-              {deal.badge || 'Launching Deal'}
-            </span>
-
-            {discount > 0 && (
-              <span className="bg-red-500 text-white text-[11px] font-black px-2.5 py-1 rounded-full shadow-lg">
-                {discount}% OFF
-              </span>
-            )}
-          </div>
-
-          {/* Savings pill */}
-          {savings > 0 && (
-            <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-md border border-brand-gold/30 text-brand-gold text-[11px] font-bold px-2.5 py-1 rounded-full shadow-md">
-              Save {formatPrice(savings)}
-            </div>
-          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#002420]/50 via-transparent to-black/20 pointer-events-none" />
 
           {/* Quick View hover prompt */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/30 backdrop-blur-[2px]">
@@ -95,6 +74,26 @@ export default function DealCard({ deal, index = 0 }) {
         {/* Card Body */}
         <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-3 sm:gap-4">
           <div>
+            {/* Badges row */}
+            <div className="flex items-center gap-1.5 flex-wrap mb-2.5">
+              <span className="flex items-center gap-1 bg-brand-gold/15 border border-brand-gold/30 text-brand-gold text-[10px] sm:text-[11px] font-bold tracking-wide uppercase px-2.5 py-0.5 rounded-full">
+                <Flame size={11} className="fill-brand-gold" />
+                {deal.badge || 'Launching Deal'}
+              </span>
+
+              {discount > 0 && (
+                <span className="bg-red-500/20 border border-red-500/30 text-red-400 text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full">
+                  {discount}% OFF
+                </span>
+              )}
+
+              {savings > 0 && (
+                <span className="bg-brand-gold/10 border border-brand-gold/30 text-brand-gold text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full">
+                  Save {formatPrice(savings)}
+                </span>
+              )}
+            </div>
+
             {/* Tagline */}
             {deal.tagline && (
               <p className="text-brand-gold/80 text-xs font-semibold uppercase tracking-wider mb-1 flex items-center gap-1">

@@ -49,19 +49,13 @@ export default function ProductModal({ product, onClose }) {
   const ModalContent = () => (
     <div className="flex flex-col h-full max-h-[90vh] overflow-y-auto">
       {/* Image Header */}
-      <div className="relative flex-shrink-0 h-56 md:h-64 overflow-hidden bg-surface-card">
+      <div className="relative flex-shrink-0 w-full aspect-square sm:aspect-[4/3] max-h-80 overflow-hidden bg-surface-card flex items-center justify-center">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-center drop-shadow-md"
           onError={e => { e.target.style.display = 'none'; e.target.parentElement.style.background = 'var(--green-dark)'; }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#111815] via-transparent to-transparent" />
-        {discount > 0 && (
-          <div className="absolute top-4 left-4 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-            {discount}% OFF
-          </div>
-        )}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
@@ -71,8 +65,23 @@ export default function ProductModal({ product, onClose }) {
       </div>
 
       <div className="p-5 flex flex-col gap-5 flex-1">
-        {/* Name & Description */}
+        {/* Name, Category & Badges */}
         <div>
+          <div className="flex items-center gap-2 flex-wrap mb-2">
+            <span className="text-xs font-semibold bg-white/5 text-white/70 px-2.5 py-1 rounded-full border border-white/10">
+              {product.category}
+            </span>
+            {discount > 0 && (
+              <span className="bg-green-500/20 border border-green-500/40 text-green-400 text-xs font-bold px-2.5 py-1 rounded-full">
+                {discount}% OFF
+              </span>
+            )}
+            {product.isPopular && (
+              <span className="flex items-center gap-1 bg-brand-gold/15 border border-brand-gold/30 text-brand-gold text-xs font-bold px-2.5 py-1 rounded-full">
+                <Star size={11} fill="currentColor" /> Popular
+              </span>
+            )}
+          </div>
           <h2 className="font-brand text-2xl text-white mb-1">{product.name}</h2>
           <p className="text-white/60 text-sm leading-relaxed">{product.description}</p>
         </div>

@@ -106,8 +106,8 @@ export default function DealsCarousel({ onDealClick }) {
       />
 
       {/* ── Ambient Glow & Edge Vignette ── */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#051815]/50 via-transparent to-[#121617] pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(5,24,21,0.65)_85%,rgba(18,22,23,0.95)_100%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#002420]/50 via-transparent to-[#121617] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(0,36,32,0.65)_85%,rgba(18,22,23,0.95)_100%)] pointer-events-none" />
 
       {/* ── Carousel Banner Container (Mobile responsive heights) ── */}
       <div className="relative z-10 w-full h-[300px] sm:h-[420px] md:h-[500px] lg:h-[580px] xl:h-[640px] flex items-center justify-center overflow-hidden">

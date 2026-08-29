@@ -31,7 +31,7 @@ export default function DealsSection() {
   }, []);
 
   return (
-    <section id="deals" className="relative py-16 sm:py-24 px-4 overflow-hidden bg-gradient-to-b from-[#061610] via-[#092117] to-[#061610]">
+    <section id="deals" className="relative py-16 sm:py-24 px-4 overflow-hidden bg-gradient-to-b from-[#001f1c] via-[#002e29] to-[#001f1c]">
       {/* Decorative ambient background glows */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-gold/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute -bottom-20 right-0 w-[400px] h-[400px] bg-green-500/5 rounded-full blur-[120px] pointer-events-none" />
@@ -79,7 +79,7 @@ export default function DealsSection() {
 
         {/* Bottom Banner */}
         <motion.div
-          className="mt-14 p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#0d2e20]/90 via-[#153e2c]/90 to-[#0d2e20]/90 border border-brand-gold/30 shadow-gold flex flex-col md:flex-row items-center justify-between gap-6"
+          className="mt-14 p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#003b34]/90 via-[#004d44]/90 to-[#003b34]/90 border border-brand-gold/30 shadow-gold flex flex-col md:flex-row items-center justify-between gap-6"
           {...fadeUp(0.3)}
         >
           <div className="flex items-center gap-4 text-left">

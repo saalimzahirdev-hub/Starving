@@ -488,8 +488,8 @@ export default function Checkout() {
                 <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
                   {items.map(item => (
                     <div key={item.cartItemId} className="flex gap-3">
-                      <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-surface-card">
-                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" onError={e => e.target.style.display='none'} />
+                      <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-surface-card flex items-center justify-center aspect-square">
+                        <img src={item.image} alt={item.name} className="w-full h-full object-cover object-center" onError={e => e.target.style.display='none'} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-white text-xs font-medium truncate">{item.name}</p>
